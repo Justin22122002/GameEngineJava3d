@@ -234,6 +234,64 @@ public class Matrix
         return mat;
     }
 
+    public Matrix pointAtMatrix(Vec3D pos, Vec3D target, Vec3D up)
+    {
+        // CALCULATE THE NEW FORWARD DIRECTION
+        Vec3D newForward = new Vec3D(0, 0, 0);
+
+        newForward = newForward.subtractVector(target, pos);
+        newForward = newForward.normalizeVector(newForward);
+
+        // CALCULATE THE NEW UP DIRECTION
+        Vec3D a = new Vec3D(0, 0, 0);
+        Vec3D newUp;
+
+        a = a.multiplyVector(newForward, a.dotProduct(up, newForward));
+        newUp = a.subtractVector(up, a);
+        newUp = a.normalizeVector(newUp);
+
+        // NEW RIGHT DIRECTION JUST TAKES THE CROSS PRODUCT
+        Vec3D newRight;
+        newRight = a.crossProduct(newUp, newForward);
+
+        // MANUALLY CONSTRUCT POINT AT MATRIX, THE DIMENSION AND TRANSITION
+        double[][] matrix = new double[][]
+                {
+                        {newRight.x, newRight.y, newRight.z, 0},
+                        {newUp.x, newUp.y, newUp.z, 0},
+                        {newForward.x, newForward.y, newForward.z, 0},
+                        {pos.x, pos.y, pos.z, 1.0}
+                };
+
+        return new Matrix(matrix);
+    }
+
+    public Matrix inverseMatrix(Matrix m)
+    {
+        Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
+        mat.matrix[0][0] = m.matrix[0][0];
+        mat.matrix[0][1] = m.matrix[1][0];
+        mat.matrix[0][2] = m.matrix[2][0];
+        mat.matrix[0][3] = 0.0;
+
+        mat.matrix[1][0] = m.matrix[0][1];
+        mat.matrix[1][1] = m.matrix[1][1];
+        mat.matrix[1][2] = m.matrix[2][1];
+        mat.matrix[1][3] = 0.0;
+
+        mat.matrix[2][0] = m.matrix[0][2];
+        mat.matrix[2][1] = m.matrix[1][2];
+        mat.matrix[2][2] = m.matrix[2][2];
+        mat.matrix[2][3] = 0.0;
+
+        mat.matrix[3][0] = -(m.matrix[3][0] * mat.matrix[0][0] + m.matrix[3][1] * mat.matrix[1][0] + m.matrix[3][2] * mat.matrix[2][0]);
+        mat.matrix[3][1] = -(m.matrix[3][0] * mat.matrix[0][1] + m.matrix[3][1] * mat.matrix[1][1] + m.matrix[3][2] * mat.matrix[2][1]);
+        mat.matrix[3][2] = -(m.matrix[3][0] * mat.matrix[0][2] + m.matrix[3][1] * mat.matrix[1][2] + m.matrix[3][2] * mat.matrix[2][2]);
+        mat.matrix[3][3] = 1.0;
+
+        return mat;
+    }
+
     @Override
     public String toString()
     {
