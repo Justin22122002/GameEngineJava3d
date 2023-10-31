@@ -2,10 +2,13 @@ package org.test;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
-public class KeyHandler implements KeyListener
+public class KeyHandler implements KeyListener, MouseMotionListener
 {
-    public boolean upPressed, rightPressed, downPressed, leftPressed, frontPressed, backPressed, rightTurn, leftTurn;
+    private int mouseX, mouseY;
+    public boolean upPressed, rightPressed, downPressed, leftPressed, frontPressed, backPressed, rightTurn, leftTurn, downTurn, upTurn;
     @Override
     public void keyPressed(KeyEvent e)
     {
@@ -47,6 +50,16 @@ public class KeyHandler implements KeyListener
         if(e.getKeyCode() == KeyEvent.VK_Q)
         {
             leftTurn = true;
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_T)
+        {
+            upTurn = true;
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_G)
+        {
+            downTurn = true;
         }
     }
 
@@ -98,5 +111,27 @@ public class KeyHandler implements KeyListener
         {
             leftTurn = false;
         }
+
+        if(e.getKeyCode() == KeyEvent.VK_T)
+        {
+            upTurn = false;
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_G)
+        {
+            downTurn = false;
+        }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e)
+    {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e)
+    {
+
     }
 }

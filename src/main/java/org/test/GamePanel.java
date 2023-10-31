@@ -32,11 +32,14 @@ public class GamePanel extends JPanel implements Runnable
     Mesh meshCube; // collection of triangles that form an object
     Vec3D vCamera = new Vec3D(0, 0, 0); // stationary position vector, that will serve as the camera
     Vec3D vLookDir = new Vec3D(0, 0, 1); // camera that follows along the look at direction
-    double fYaw;
+    double fYaw = 0.0;
+    double fPitch = 0.0;
+    boolean drawEdges = false;
 
     public GamePanel()
     {
         this.addKeyListener(keyH);
+        this.addMouseMotionListener(keyH);
         this.setFocusable(true);
         this.setDoubleBuffered(true);
         initializeMesh();
@@ -161,6 +164,16 @@ public class GamePanel extends JPanel implements Runnable
         {
             fYaw += 0.008;
         }
+
+        if (keyH.upTurn)
+        {
+            fPitch -= 0.008;
+        }
+
+        if (keyH.downTurn)
+        {
+            fPitch += 0.008;
+        }
     }
 
     public void paintComponent(Graphics g)
@@ -169,7 +182,7 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g2);
 
         // Fill the screen black
-        g2.setColor(new Color(0, 0, 0));
+        g2.setColor(new Color(173, 216, 230));
         g2.fillRect(0, 0, 800, 600);
 
         // rotation matrix
@@ -188,7 +201,7 @@ public class GamePanel extends JPanel implements Runnable
 
         Vec3D vUp = new Vec3D(0, 1, 0);
         Vec3D vTarget = new Vec3D(0, 0, 1);
-        Matrix matCameraRot = mat.rotateMatrixY(fYaw);
+        Matrix matCameraRot = mat.matrixMatrixMultiplication(mat.rotateMatrixY(fYaw), mat.rotateMatrixX(fPitch));
         vLookDir = mat.multiplyMatrixVector(vTarget, matCameraRot);
         vTarget = vTarget.addVector(vCamera, vLookDir);
 
@@ -278,19 +291,22 @@ public class GamePanel extends JPanel implements Runnable
 
         vecTrianglesToRaster.forEach(triProjection ->
         {
-            g2.setColor(Color.BLACK);
+            if(drawEdges)
+            {
+                g2.setColor(Color.BLACK);
 
-            // draw edges of the triangle
-            drawTriangle
-                    (
-                            g2,
-                            triProjection.vec3D.x,
-                            triProjection.vec3D.y,
-                            triProjection.vec3D2.x,
-                            triProjection.vec3D2.y,
-                            triProjection.vec3D3.x,
-                            triProjection.vec3D3.y
-                    );
+                // draw edges of the triangle
+                drawTriangle
+                        (
+                                g2,
+                                triProjection.vec3D.x,
+                                triProjection.vec3D.y,
+                                triProjection.vec3D2.x,
+                                triProjection.vec3D2.y,
+                                triProjection.vec3D3.x,
+                                triProjection.vec3D3.y
+                        );
+            }
 
             // fill the triangle
             g2.setColor(triProjection.color);
