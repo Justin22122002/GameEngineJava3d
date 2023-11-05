@@ -2,8 +2,10 @@ package org.test.math;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Mesh
 {
@@ -18,39 +20,108 @@ public class Mesh
     {
     }
 
+    public String[] readFromFile(String filename)
+    {
+        File file = new File(filename);
+        List<String> contents = new ArrayList<>();
+
+        if (file.exists())
+        {
+            try
+            {
+                Scanner scanner = new Scanner(file);
+
+                String readLine;
+                while (scanner.hasNextLine())
+                {
+                    readLine = scanner.nextLine();
+                    contents.add(readLine);
+                }
+                scanner.close();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return contents.toArray(new String[contents.size()]);
+    }
+
     /**
      * !!! OBJ-Dateiformat !!!
      */
-    public void loadObjectFromFile(List<Triangle> tris, List<Vec3D> verts, String fileName, String fileName2)
+    public List<Triangle> ReadOBJFile(String f, boolean textured)
     {
-        File file = new File(fileName);
-        File file2 = new File(fileName2);
-
-        try(Scanner scan = new Scanner(file);
-            Scanner scan2 = new Scanner(file2))
+        String[] data = readFromFile(f);
+        List<float[]> vertices = new ArrayList<>();
+        List<float[]> texs = new ArrayList<>();
+        List<Triangle> tris = new ArrayList<>();
+        for (String s : data)
         {
-            while (scan.hasNextLine())
+            String[] split = s.split(Pattern.quote(" "));
+            if (split[0].equalsIgnoreCase("v"))
             {
-                double x = - scan.nextDouble();
-                double y = - scan.nextDouble();
-                double z = scan.nextDouble();
-
-                verts.add(new Vec3D(x, y, z));
+                vertices.add(new float[]{Float.parseFloat(split[1]), Float.parseFloat(split[2]), Float.parseFloat(split[3])});
             }
-
-            while (scan2.hasNextLine())
+            else if (split[0].equalsIgnoreCase("vt"))
             {
-                int [] f = new int[3];
-                f[0] = scan2.nextInt();
-                f[1] = scan2.nextInt();
-                f[2] = scan2.nextInt();
-
-                tris.add(new Triangle(verts.get(f[0] - 1), verts.get(f[1] - 1), verts.get(f[2] - 1)));
+                float u = Math.min(1, Math.max(0, Float.parseFloat(split[1])));
+                float v = Math.min(1, Math.max(0, Float.parseFloat(split[2])));
+                texs.add(new float[]{u, v});
+            }
+            else if (split[0].equalsIgnoreCase("f"))
+            {
+                if (textured)
+                {
+                    String[] spl1 = split[1].split(Pattern.quote("/"));
+                    String[] spl2 = split[2].split(Pattern.quote("/"));
+                    String[] spl3 = split[3].split(Pattern.quote("/"));
+                    Triangle tri = new Triangle(
+                            new Vec3D(
+                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
+                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
+                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[2]),
+                            new Vec3D(
+                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
+                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
+                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[2]),
+                            new Vec3D(
+                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
+                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
+                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[2]),
+                            new Vec2D(
+                                    texs.get(Integer.parseInt(spl1[1]) - 1)[0],
+                                    texs.get(Integer.parseInt(spl1[1]) - 1)[1]),
+                            new Vec2D(
+                                    texs.get(Integer.parseInt(spl2[1]) - 1)[0],
+                                    texs.get(Integer.parseInt(spl2[1]) - 1)[1]),
+                            new Vec2D(
+                                    texs.get(Integer.parseInt(spl3[1]) - 1)[0],
+                                    texs.get(Integer.parseInt(spl3[1]) - 1)[1]));
+                    tris.add(tri);
+                }
+                else
+                {
+                    String[] spl1 = split[1].split(Pattern.quote("/"));
+                    String[] spl2 = split[2].split(Pattern.quote("/"));
+                    String[] spl3 = split[3].split(Pattern.quote("/"));
+                    Triangle tri = new Triangle(
+                            new Vec3D(
+                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
+                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
+                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[2]),
+                            new Vec3D(
+                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
+                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
+                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[2]),
+                            new Vec3D(
+                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
+                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
+                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[2]));
+                    tris.add(tri);
+                }
             }
         }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
+        return tris;
     }
 }

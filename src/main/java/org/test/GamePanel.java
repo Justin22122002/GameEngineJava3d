@@ -7,6 +7,8 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static org.test.Main.getImageHeight;
+import static org.test.Main.getImageWidth;
 import static org.test.gfx.DrawUtils.drawTriangle;
 
 public class GamePanel extends JPanel implements Runnable
@@ -21,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable
     double fNear = 0.1; // nearest clip plane
     double fFar = 1000.0;  // furthers clip plane
     double fov = 90.0; // flied of view
-    double a = 600.0 / 800.0; // aspect ratio of the window
+    double a = getImageHeight() / getImageWidth(); // aspect ratio of the window
     Matrix mat = new Matrix();
     Matrix matProj = mat.projektionMatrix(fNear, fFar, a, fov); // projection matrix
     Matrix matZ, matZX; // rotation matrix
@@ -115,6 +117,8 @@ public class GamePanel extends JPanel implements Runnable
                                         new Triangle(new Vec3D(1, 0, 1), new Vec3D(0, 0, 0), new Vec3D(1, 0, 0)),
                                 })
         );
+
+        meshCube = new Mesh(meshCube.ReadOBJFile("axis.obj", false));
     }
 
     public void update()
@@ -178,12 +182,12 @@ public class GamePanel extends JPanel implements Runnable
         Graphics2D g2 = (Graphics2D) g;
         super.paintComponent(g2);
 
-        // Fill the screen black
+        // Fill the screen background
         g2.setColor(new Color(173, 216, 230));
-        g2.fillRect(0, 0, 800, 600);
+        g2.fillRect(0, 0, getWidth(), getHeight());
 
         // rotation matrix
-        //fTheta += 0.02;
+        // fTheta += 0.0002;
         matZ = mat.rotateMatrixZ(fTheta * 0.5);
         matZX = mat.rotateMatrixX(fTheta);
 
@@ -198,7 +202,7 @@ public class GamePanel extends JPanel implements Runnable
 
         Vec3D vUp = new Vec3D(0, 1, 0);
         Vec3D vTarget = new Vec3D(0, 0, 1);
-        Matrix matCameraRot = mat.matrixMatrixMultiplication(mat.rotateMatrixY(fYaw), mat.rotateMatrixX(fPitch));
+        Matrix matCameraRot = mat.matrixMatrixMultiplication(mat.rotateMatrixX(fPitch), mat.rotateMatrixY(fYaw));
         vLookDir = mat.multiplyMatrixVector(vTarget, matCameraRot);
         vTarget = vTarget.addVector(vCamera, vLookDir);
 
@@ -272,12 +276,12 @@ public class GamePanel extends JPanel implements Runnable
                     triProjection.vec3D2.y += 1.0;
                     triProjection.vec3D3.y += 1.0;
 
-                    triProjection.vec3D.x *= 0.5 * 800.0;
-                    triProjection.vec3D.y *= 0.5 * 600.0;
-                    triProjection.vec3D2.x *= 0.5 * 800.0;
-                    triProjection.vec3D2.y *= 0.5 * 600.0;
-                    triProjection.vec3D3.x *= 0.5 * 800.0;
-                    triProjection.vec3D3.y *= 0.5 * 600.0;
+                    triProjection.vec3D.x *= 0.5 * getImageWidth();
+                    triProjection.vec3D.y *= 0.5 * getImageHeight();
+                    triProjection.vec3D2.x *= 0.5 * getImageWidth();
+                    triProjection.vec3D2.y *= 0.5 * getImageHeight();
+                    triProjection.vec3D3.x *= 0.5 * getImageWidth();
+                    triProjection.vec3D3.y *= 0.5 * getImageHeight();
 
                     // set the current lighting color
                     int value = (int) Math.abs(dp * 255);
@@ -294,7 +298,7 @@ public class GamePanel extends JPanel implements Runnable
             double z1 = o1.vec3D.z + o1.vec3D2.z + o1.vec3D3.z / 3.0;
             double z2 = o2.vec3D.z + o2.vec3D2.z + o2.vec3D3.z / 3.0;
 
-            return Double.compare(z1, z2);
+            return (z1 < z2) ? 1 : (z1 == z2) ? 0 : -1;
         });
 
         // print to screen
@@ -334,7 +338,7 @@ public class GamePanel extends JPanel implements Runnable
                         break;
                         case 1:
                         {
-                            trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(0, 600.0 - 1.0, 0), new Vec3D(0, -1, 0), test, clipped);
+                            trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(0, getImageHeight() - 1.0, 0), new Vec3D(0, -1, 0), test, clipped);
                         }
                         break;
                         case 2:
@@ -344,7 +348,7 @@ public class GamePanel extends JPanel implements Runnable
                         break;
                         case 3:
                         {
-                            trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(800.0 - 1.0, 0, 0), new Vec3D(-1, 0, 0), test, clipped);
+                            trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(getImageWidth() - 1.0, 0, 0), new Vec3D(-1, 0, 0), test, clipped);
                         }
                         break;
                     }
@@ -359,7 +363,7 @@ public class GamePanel extends JPanel implements Runnable
 
             listTriangles.forEach(triangle ->
             {
-                if (drawEdges)
+                if (!drawEdges)
                 {
                     g2.setColor(Color.BLACK);
 

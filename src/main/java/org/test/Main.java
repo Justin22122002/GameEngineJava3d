@@ -4,15 +4,15 @@ import javax.swing.*;
 
 public class Main
 {
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    private static final double WIDTH = 1080.0;
+    private static final double HEIGHT = 720.0;
     private static final String TITLE = "3dGameEngine";
 
     public static void main(String[] args)
     {
         GamePanel gp = new GamePanel();
         JFrame jFrame = new JFrame();
-        jFrame.setSize(WIDTH, HEIGHT);
+        jFrame.setSize((int) WIDTH, (int) HEIGHT);
         jFrame.setResizable(false);
         jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jFrame.setTitle(TITLE);
@@ -21,5 +21,15 @@ public class Main
         jFrame.setVisible(true);
 
         gp.startThread();
+    }
+
+    public static double getImageWidth()
+    {
+        return Main.WIDTH;
+    }
+
+    public static double getImageHeight()
+    {
+        return Main.HEIGHT;
     }
 }
