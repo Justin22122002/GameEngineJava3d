@@ -118,19 +118,21 @@ public class GamePanel extends JPanel implements Runnable
                                 })
         );
 
-        meshCube = new Mesh(meshCube.ReadOBJFile("axis.obj", false));
+        meshCube = new Mesh(meshCube.ReadOBJFile("teapot.obj", false));
     }
 
     public void update()
     {
+        Vec3D vForward = vLookDir.normalizeVector(vLookDir); // Normalisierte Blickrichtung
+
         if (keyH.rightPressed)
         {
-            vCamera.x += 0.1;
+            vCamera = vCamera.subtractVector(vCamera, vForward.crossProduct(vLookDir, new Vec3D(0, 0.1, 0)));
         }
 
         if (keyH.leftPressed)
         {
-            vCamera.x -= 0.1;
+            vCamera = vCamera.addVector(vCamera, vForward.crossProduct(vLookDir, new Vec3D(0, 0.1, 0)));
         }
 
         if (keyH.downPressed)
@@ -143,17 +145,14 @@ public class GamePanel extends JPanel implements Runnable
             vCamera.y -= 0.1;
         }
 
-        Vec3D vForward = new Vec3D(0, 0, 0);
-        vForward = vForward.multiplyVector(vLookDir, 1.0);
-
         if (keyH.frontPressed)
         {
-            vCamera = vForward.addVector(vCamera, vForward);
+            vCamera = vCamera.addVector(vCamera, vForward);
         }
 
         if (keyH.backPressed)
         {
-            vCamera = vForward.subtractVector(vCamera, vForward);
+            vCamera = vCamera.subtractVector(vCamera, vForward);
         }
 
         if (keyH.rightTurn)
@@ -237,8 +236,7 @@ public class GamePanel extends JPanel implements Runnable
             normal = line1.crossProduct(line1, line2);
             normal = line1.normalizeVector(normal);
 
-            Vec3D vCameraRay = new Vec3D(0, 0, 0);
-            vCameraRay = line1.subtractVector(triTrans.vec3D, vCamera);
+            Vec3D vCameraRay = line1.subtractVector(triTrans.vec3D, vCamera);
 
             // how much is each triangle's surface normal projection onto the camera
             if (line1.dotProduct(normal, vCameraRay) < 0.0)
@@ -355,6 +353,7 @@ public class GamePanel extends JPanel implements Runnable
 
                     for (int w = 0; w < trisToAdd; w++)
                     {
+                        clipped[w].color = t.color;
                         listTriangles.add(clipped[w]);
                     }
                 }

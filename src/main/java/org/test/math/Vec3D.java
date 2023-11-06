@@ -2,14 +2,22 @@ package org.test.math;
 
 public class Vec3D
 {
-    public double x, y, z;
-    public float dp;
+    public double x, y, z, w;
 
     public Vec3D(double x, double y, double z)
     {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.w = 1;
+    }
+
+    public Vec3D()
+    {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.w = 1;
     }
 
     public Vec3D addVector(Vec3D in, Vec3D in2)
