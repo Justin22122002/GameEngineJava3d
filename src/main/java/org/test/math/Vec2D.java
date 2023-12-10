@@ -41,4 +41,10 @@ public class Vec2D
             this.v /= v;
         }
     }
+
+    @Override
+    public Object clone()
+    {
+        return new Vec2D(u, v);
+    }
 }

@@ -1,12 +1,18 @@
 package org.test.math;
 
+import org.test.gfx.Texture;
+
 import java.awt.*;
 
 public class Triangle
 {
+    // Point Coordinates
     public Vec3D vec3D, vec3D2, vec3D3;
+    //Texture Coordinates
     public Vec2D vec2D, vec2D2, vec2D3;
     public Color color;
+    public double dp;
+    public Texture tex;
 
     public Triangle(Vec3D vec3D, Vec3D vec3D2, Vec3D vec3D3)
     {
@@ -23,6 +29,16 @@ public class Triangle
         this.vec2D = vec2D;
         this.vec2D2 = vec2D2;
         this.vec2D3 = vec2D3;
+    }
+
+    public Triangle()
+    {
+        this.vec3D = new Vec3D();
+        this.vec3D2 = new Vec3D();
+        this.vec3D3 = new Vec3D();
+        this.vec2D = new Vec2D(0,0);
+        this.vec2D2 = new Vec2D(0,0);
+        this.vec2D3 = new Vec2D(0,0);
     }
 
     public Color color(int r, int g, int b)

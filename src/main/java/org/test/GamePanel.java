@@ -1,19 +1,34 @@
 package org.test;
 
+import org.test.gfx.Texture;
+import org.test.gfx.ZBuffer;
 import org.test.math.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.MemoryImageSource;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
 import static org.test.Main.getImageHeight;
 import static org.test.Main.getImageWidth;
-import static org.test.gfx.DrawUtils.drawTriangle;
+import static org.test.gfx.ColorUtils.CD_BLACK;
+import static org.test.gfx.DrawUtils.TexturedTriangle;
+import static org.test.gfx.DrawUtils.slFill;
 
 public class GamePanel extends JPanel implements Runnable
 {
     Thread gameThread;
+    private Image imageBuffer;
+    private MemoryImageSource mImageProducer;
+    private ColorModel cm;
+    private int[] pixels;
+    private ZBuffer zBuffer = new ZBuffer((int) getImageWidth(), (int) getImageHeight());;
 
     // Frames per second
     double fps = 60;
@@ -37,11 +52,35 @@ public class GamePanel extends JPanel implements Runnable
 
     public GamePanel()
     {
+        cm = getCompatibleColorModel();
+
+        int screenSize = (int) getImageWidth() * (int) getImageHeight();
+
+        if(pixels == null || pixels.length < screenSize)
+        {
+            pixels = new int[screenSize];
+        }
+
+        // This class is an implementation of the ImageProducer interface which uses an array
+        // to produce pixel values for an Image.
+        mImageProducer =  new MemoryImageSource((int) getImageWidth(), (int) getImageHeight(), cm, pixels,0, (int) getImageWidth());
+        mImageProducer.setAnimated(true);
+        mImageProducer.setFullBufferUpdates(true);
+        imageBuffer = Toolkit.getDefaultToolkit().createImage(mImageProducer);
+
         this.addKeyListener(keyH);
         this.addMouseMotionListener(keyH);
         this.setFocusable(true);
         this.setDoubleBuffered(true);
         initializeMesh();
+    }
+
+    protected static ColorModel getCompatibleColorModel()
+    {
+        GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                getDefaultConfiguration();
+        return gfx_config.getColorModel();
     }
 
     public void startThread()
@@ -98,27 +137,42 @@ public class GamePanel extends JPanel implements Runnable
                         new Triangle[]
                                 {
                                         // SOUTH
-                                        new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 1, 0), new Vec3D(1, 1, 0)),
-                                        new Triangle(new Vec3D(0, 0, 0), new Vec3D(1, 1, 0), new Vec3D(1, 0, 0)),
+                                        new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 1, 0), new Vec3D(1, 1, 0), new Vec2D(0.0, 1.0), new Vec2D(0.0, 0.0), new Vec2D(1.0, 0.0)),
+                                        new Triangle(new Vec3D(0, 0, 0), new Vec3D(1, 1, 0), new Vec3D(1, 0, 0), new Vec2D(0.0, 1.0), new Vec2D(1.0, 0.0), new Vec2D(1.0, 1.0)),
                                         // EAST
-                                        new Triangle(new Vec3D(1, 0, 0), new Vec3D(1, 1, 0), new Vec3D(1, 1, 1)),
-                                        new Triangle(new Vec3D(1, 0, 0), new Vec3D(1, 1, 1), new Vec3D(1, 0, 1)),
+                                        new Triangle(new Vec3D(1, 0, 0), new Vec3D(1, 1, 0), new Vec3D(1, 1, 1), new Vec2D(0.0, 1.0), new Vec2D(0.0, 0.0), new Vec2D(1.0, 0.0)),
+                                        new Triangle(new Vec3D(1, 0, 0), new Vec3D(1, 1, 1), new Vec3D(1, 0, 1), new Vec2D(0.0, 1.0), new Vec2D(1.0, 0.0), new Vec2D(1.0, 1.0)),
                                         // NORTH
-                                        new Triangle(new Vec3D(1, 0, 1), new Vec3D(1, 1, 1), new Vec3D(0, 1, 1)),
-                                        new Triangle(new Vec3D(1, 0, 1), new Vec3D(0, 1, 1), new Vec3D(0, 0, 1)),
+                                        new Triangle(new Vec3D(1, 0, 1), new Vec3D(1, 1, 1), new Vec3D(0, 1, 1), new Vec2D(0.0, 1.0), new Vec2D(0.0, 0.0), new Vec2D(1.0, 0.0)),
+                                        new Triangle(new Vec3D(1, 0, 1), new Vec3D(0, 1, 1), new Vec3D(0, 0, 1), new Vec2D(0.0, 1.0), new Vec2D(1.0, 0.0), new Vec2D(1.0, 1.0)),
                                         // WEST
-                                        new Triangle(new Vec3D(0, 0, 1), new Vec3D(0, 1, 1), new Vec3D(0, 1, 0)),
-                                        new Triangle(new Vec3D(0, 0, 1), new Vec3D(0, 1, 0), new Vec3D(0, 0, 0)),
+                                        new Triangle(new Vec3D(0, 0, 1), new Vec3D(0, 1, 1), new Vec3D(0, 1, 0), new Vec2D(0.0, 1.0), new Vec2D(0.0, 0.0), new Vec2D(1.0, 0.0)),
+                                        new Triangle(new Vec3D(0, 0, 1), new Vec3D(0, 1, 0), new Vec3D(0, 0, 0), new Vec2D(0.0, 1.0), new Vec2D(1.0, 0.0), new Vec2D(1.0, 1.0)),
                                         // TOP
-                                        new Triangle(new Vec3D(0, 1, 0), new Vec3D(0, 1, 1), new Vec3D(1, 1, 1)),
-                                        new Triangle(new Vec3D(0, 1, 0), new Vec3D(1, 1, 1), new Vec3D(1, 1, 0)),
+                                        new Triangle(new Vec3D(0, 1, 0), new Vec3D(0, 1, 1), new Vec3D(1, 1, 1), new Vec2D(0.0, 1.0), new Vec2D(0.0, 0.0), new Vec2D(1.0, 0.0)),
+                                        new Triangle(new Vec3D(0, 1, 0), new Vec3D(1, 1, 1), new Vec3D(1, 1, 0), new Vec2D(0.0, 1.0), new Vec2D(1.0, 0.0), new Vec2D(1.0, 1.0)),
                                         // BOTTOM
-                                        new Triangle(new Vec3D(1, 0, 1), new Vec3D(0, 0, 1), new Vec3D(0, 0, 0)),
-                                        new Triangle(new Vec3D(1, 0, 1), new Vec3D(0, 0, 0), new Vec3D(1, 0, 0)),
+                                        new Triangle(new Vec3D(1, 0, 1), new Vec3D(0, 0, 1), new Vec3D(0, 0, 0), new Vec2D(0.0, 1.0), new Vec2D(0.0, 0.0), new Vec2D(1.0, 0.0)),
+                                        new Triangle(new Vec3D(1, 0, 1), new Vec3D(0, 0, 0), new Vec3D(1, 0, 0), new Vec2D(0.0, 1.0), new Vec2D(1.0, 0.0), new Vec2D(1.0, 1.0)),
                                 })
         );
 
-        meshCube = new Mesh(meshCube.ReadOBJFile("teapot.obj", false));
+        BufferedImage img = null;
+        try
+        {
+            img = ImageIO.read(new File("./car4.png"));
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+
+        meshCube = new Mesh(meshCube.ReadOBJFile("car4.obj", true));
+
+        for(Triangle t : meshCube.triangles)
+        {
+            t.tex = new Texture(img);
+        }
     }
 
     public void update()
@@ -178,12 +232,13 @@ public class GamePanel extends JPanel implements Runnable
 
     public void paintComponent(Graphics g)
     {
+        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        super.paintComponent(g2);
 
         // Fill the screen background
-        g2.setColor(new Color(173, 216, 230));
-        g2.fillRect(0, 0, getWidth(), getHeight());
+        slFill(pixels, CD_BLACK);
+        // g2.setColor(new Color(173, 216, 230));
+        // g2.fillRect(0, 0, getWidth(), getHeight());
 
         // rotation matrix
         // fTheta += 0.0002;
@@ -218,12 +273,16 @@ public class GamePanel extends JPanel implements Runnable
         {
             Triangle triProjection = new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0));
             Triangle triTrans = new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0));
-            Triangle triViewed = new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0),
-                    new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0));
+            Triangle triViewed = new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0));
 
+            // assemble World Matrix
+            // TODO: extract method
             triTrans.vec3D = mat.multiplyMatrixVector(tri.vec3D, matWorld);
             triTrans.vec3D2 = mat.multiplyMatrixVector(tri.vec3D2, matWorld);
             triTrans.vec3D3 = mat.multiplyMatrixVector(tri.vec3D3, matWorld);
+            triTrans.vec2D = tri.vec2D;
+            triTrans.vec2D2 = tri.vec2D2;
+            triTrans.vec2D3 = tri.vec2D3;
 
             // collect surface normals and see how much they map over the camera
             Vec3D normal = new Vec3D(0, 0, 0);
@@ -248,12 +307,21 @@ public class GamePanel extends JPanel implements Runnable
                 double dp = Math.max(0.1, line1.dotProduct(light_direction, normal));
 
                 // convert world space to view space
+                // TODO: extract method
                 triViewed.vec3D = matView.multiplyMatrixVector(triTrans.vec3D, matView);
                 triViewed.vec3D2 = matView.multiplyMatrixVector(triTrans.vec3D2, matView);
                 triViewed.vec3D3 = matView.multiplyMatrixVector(triTrans.vec3D3, matView);
+                triViewed.vec2D = triTrans.vec2D;
+                triViewed.vec2D2 = triTrans.vec2D2;
+                triViewed.vec2D3 = triTrans.vec2D3;
+
+                // project 3d to 2d screen
+                triProjection.vec3D = mat.multiplyMatrixVector(triViewed.vec3D, matProj);
+                triProjection.vec3D2 = mat.multiplyMatrixVector(triViewed.vec3D2, matProj);
+                triProjection.vec3D3 = mat.multiplyMatrixVector(triViewed.vec3D3, matProj);
 
                 // Clip viewed triangle against near plane
-                int clippedTriangles = 0;
+                int clippedTriangles;
                 Triangle[] clipped = new Triangle[]{new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0))
                         , new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0))};
 
@@ -265,6 +333,9 @@ public class GamePanel extends JPanel implements Runnable
                     triProjection.vec3D = mat.multiplyMatrixVector(clipped[n].vec3D, matProj);
                     triProjection.vec3D2 = mat.multiplyMatrixVector(clipped[n].vec3D2, matProj);
                     triProjection.vec3D3 = mat.multiplyMatrixVector(clipped[n].vec3D3, matProj);
+                    triProjection.vec2D = (Vec2D)clipped[n].vec2D.clone();
+                    triProjection.vec2D2 = (Vec2D)clipped[n].vec2D2.clone();
+                    triProjection.vec2D3 = (Vec2D)clipped[n].vec2D3.clone();
 
                     // scale into view
                     triProjection.vec3D.x += 1.0;
@@ -284,6 +355,8 @@ public class GamePanel extends JPanel implements Runnable
                     // set the current lighting color
                     int value = (int) Math.abs(dp * 255);
                     triProjection.color(value, value, value);
+                    triProjection.tex = tri.tex;
+                    triProjection.dp = dp;
 
                     vecTrianglesToRaster.add(triProjection);
                 }
@@ -293,14 +366,16 @@ public class GamePanel extends JPanel implements Runnable
         // sort them by the distance from the camera
         vecTrianglesToRaster.sort((o1, o2) ->
         {
-            double z1 = o1.vec3D.z + o1.vec3D2.z + o1.vec3D3.z / 3.0;
-            double z2 = o2.vec3D.z + o2.vec3D2.z + o2.vec3D3.z / 3.0;
+            double z1 = (o1.vec3D.z + o1.vec3D2.z + o1.vec3D3.z) / 3.0;
+            double z2 = (o2.vec3D.z + o2.vec3D2.z + o2.vec3D3.z) / 3.0;
 
-            return (z1 < z2) ? 1 : (z1 == z2) ? 0 : -1;
+            return (z1 > z2) ? 1 : (z1 == z2) ? 0 : -1;
         });
 
+        zBuffer.resetBuffer();
+
         // print to screen
-        vecTrianglesToRaster.forEach(t ->
+        for(Triangle t: vecTrianglesToRaster)
         {
             Triangle[] clipped;
             LinkedList<Triangle> listTriangles = new LinkedList<>();
@@ -317,11 +392,6 @@ public class GamePanel extends JPanel implements Runnable
                             new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0))};
 
                     Triangle test = listTriangles.peek();
-
-                    test.vec2D = new Vec2D(0, 0);
-                    test.vec2D2 = new Vec2D(0, 0);
-                    test.vec2D3 = new Vec2D(0, 0);
-
                     listTriangles.pollFirst();
                     nNewTriangles--;
 
@@ -329,68 +399,66 @@ public class GamePanel extends JPanel implements Runnable
 
                     switch (p)
                     {
-                        case 0:
-                        {
-                            trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(0, 0, 0), new Vec3D(0, 1, 0), test, clipped);
-                        }
-                        break;
-                        case 1:
-                        {
-                            trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(0, getImageHeight() - 1.0, 0), new Vec3D(0, -1, 0), test, clipped);
-                        }
-                        break;
-                        case 2:
-                        {
-                            trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(0, 0, 0), new Vec3D(1, 0, 0), test, clipped);
-                        }
-                        break;
-                        case 3:
-                        {
-                            trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(getImageWidth() - 1.0, 0, 0), new Vec3D(-1, 0, 0), test, clipped);
-                        }
-                        break;
+                        case 0 -> trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(0, 0, 0), new Vec3D(0, 1, 0), test, clipped);
+                        case 1 -> trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(0, getImageHeight() - 1.0, 0), new Vec3D(0, -1, 0), test, clipped);
+                        case 2 -> trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(0, 0, 0), new Vec3D(1, 0, 0), test, clipped);
+                        case 3 -> trisToAdd = vec.triangleClipAgainstPlane(new Vec3D(getImageWidth() - 1.0, 0, 0), new Vec3D(-1, 0, 0), test, clipped);
+                        default -> throw new IllegalArgumentException("Invalid value for p: " + p);
                     }
+
 
                     for (int w = 0; w < trisToAdd; w++)
                     {
-                        clipped[w].color = t.color;
                         listTriangles.add(clipped[w]);
                     }
                 }
                 nNewTriangles = listTriangles.size();
             }
 
-            listTriangles.forEach(triangle ->
+            for(Triangle triangle: listTriangles)
             {
-                if (!drawEdges)
+                if(triangle.vec2D != null)
                 {
-                    g2.setColor(Color.BLACK);
-
-                    // draw edges of the triangle
-                    drawTriangle
-                            (
-                                    g2,
-                                    triangle.vec3D.x,
-                                    triangle.vec3D.y,
-                                    triangle.vec3D2.x,
-                                    triangle.vec3D2.y,
-                                    triangle.vec3D3.x,
-                                    triangle.vec3D3.y
-                            );
+                    TexturedTriangle(g2, (int) triangle.vec3D.x,(int) triangle.vec3D.y, triangle.vec2D.u, triangle.vec2D.v,triangle.vec2D.w,
+                            (int) triangle.vec3D2.x,(int) triangle.vec3D2.y, triangle.vec2D2.u, triangle.vec2D2.v, triangle.vec2D2.w,
+                            (int) triangle.vec3D3.x,(int) triangle.vec3D3.y, triangle.vec2D3.u, triangle.vec2D3.v, triangle.vec2D3.w,
+                            triangle.tex, 0, false, false, pixels, zBuffer, triangle.tex.getTexArray(), triangle.dp);
                 }
+            }
+        }
 
-                g2.setColor(triangle.color);
-
-                Polygon pol = new Polygon();
-                pol.addPoint((int) triangle.vec3D.x, (int) triangle.vec3D.y);
-                pol.addPoint((int) triangle.vec3D2.x, (int) triangle.vec3D2.y);
-                pol.addPoint((int) triangle.vec3D3.x, (int) triangle.vec3D3.y);
-
-                g2.fill(pol);
-            });
-
-        });
+        // ask ImageProducer to update image
+        mImageProducer.newPixels();
+        g2.drawImage(this.imageBuffer, 0, 0, (int) getImageWidth(), (int) getImageHeight(), this);
 
         g.dispose();
     }
+
+    /** OLD DRAWING
+     *                 if (!drawEdges)
+     *                 {
+     *                     g2.setColor(Color.BLACK);
+     *
+     *                     // draw edges of the triangle
+     *                     drawTriangle
+     *                             (
+     *                                     g2,
+     *                                     triangle.vec3D.x,
+     *                                     triangle.vec3D.y,
+     *                                     triangle.vec3D2.x,
+     *                                     triangle.vec3D2.y,
+     *                                     triangle.vec3D3.x,
+     *                                     triangle.vec3D3.y
+     *                             );
+     *                 }
+     *
+     *                 g2.setColor(triangle.color);
+     *
+     *                 Polygon pol = new Polygon();
+     *                 pol.addPoint((int) triangle.vec3D.x, (int) triangle.vec3D.y);
+     *                 pol.addPoint((int) triangle.vec3D2.x, (int) triangle.vec3D2.y);
+     *                 pol.addPoint((int) triangle.vec3D3.x, (int) triangle.vec3D3.y);
+     *
+     *                 g2.fill(pol);
+     */
 }
