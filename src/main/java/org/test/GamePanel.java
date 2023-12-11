@@ -54,8 +54,8 @@ public class GamePanel extends JPanel implements Runnable
     {
         cm = getCompatibleColorModel();
 
+        // calculate the pixels depending on the current screen / Panel size
         int screenSize = (int) getImageWidth() * (int) getImageHeight();
-
         if(pixels == null || pixels.length < screenSize)
         {
             pixels = new int[screenSize];
@@ -68,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable
         mImageProducer.setFullBufferUpdates(true);
         imageBuffer = Toolkit.getDefaultToolkit().createImage(mImageProducer);
 
+        // Basic JPanel Configuration
         this.addKeyListener(keyH);
         this.addMouseMotionListener(keyH);
         this.setFocusable(true);
@@ -77,9 +78,10 @@ public class GamePanel extends JPanel implements Runnable
 
     protected static ColorModel getCompatibleColorModel()
     {
-        GraphicsConfiguration gfx_config = GraphicsEnvironment.
-                getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                getDefaultConfiguration();
+        GraphicsConfiguration gfx_config = GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice()
+                .getDefaultConfiguration();
         return gfx_config.getColorModel();
     }
 

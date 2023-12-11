@@ -68,7 +68,7 @@ public class ColorUtils
 
     public static int dotColor(int col, double factor)
     {
-        int i1 = col;//blend(col, blend(col, CD_RED, factor), factor);
+        int i1 = col; //blend(col, blend(col, CD_RED, factor), factor);
 
         int a1 = getA(i1);
         int r1 = getR(i1);
@@ -110,21 +110,46 @@ public class ColorUtils
         return a << 24 | r << 16 | g << 8 | b;
     }
 
+
+    /**
+     * Extracts the alpha value (transparency) from an ARGB color value.
+     *
+     * @param col The ARGB color value from which the alpha value is to be extracted.
+     * @return The alpha value of the color in the range of 0 to 255.
+     */
     public static int getA(int col)
     {
         return (col >> 24 & 0xff);
     }
 
+    /**
+     * Extracts the red value from an ARGB color value.
+     *
+     * @param col The ARGB color value from which the red value is to be extracted.
+     * @return The red value of the color in the range of 0 to 255.
+     */
     public static int getR(int col)
     {
         return ((col & 0xff0000) >> 16);
     }
 
+    /**
+     * Extracts the green value from an ARGB color value.
+     *
+     * @param col The ARGB color value from which the green value is to be extracted.
+     * @return The green value of the color in the range of 0 to 255.
+     */
     public static int getG(int col)
     {
         return ((col & 0xff00) >> 8);
     }
 
+    /**
+     * Extracts the blue value from an ARGB color value.
+     *
+     * @param col The ARGB color value from which the blue value is to be extracted.
+     * @return The blue value of the color in the range of 0 to 255.
+     */
     public static int getB(int col)
     {
         return (col & 0xff);
