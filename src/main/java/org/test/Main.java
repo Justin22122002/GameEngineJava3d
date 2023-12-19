@@ -4,8 +4,8 @@ import javax.swing.*;
 
 public class Main
 {
-    private static final double WIDTH = 1080.0;
-    private static final double HEIGHT = 720.0;
+    private static final double WIDTH = 1440.0;
+    private static final double HEIGHT = 1080.0;
     private static final String TITLE = "3dGameEngine";
 
     public static void main(String[] args)
