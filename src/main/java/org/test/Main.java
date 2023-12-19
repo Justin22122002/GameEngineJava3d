@@ -14,7 +14,7 @@ public class Main
         JFrame jFrame = new JFrame();
         jFrame.setSize((int) WIDTH, (int) HEIGHT);
         jFrame.setResizable(false);
-        jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setTitle(TITLE);
         jFrame.setLocationRelativeTo(null);
         jFrame.add(gp);

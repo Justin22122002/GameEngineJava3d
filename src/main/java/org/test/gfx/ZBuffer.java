@@ -39,11 +39,7 @@ public class ZBuffer
             return false;
         }
 
-        if(zBuffer[x + y * width] < value)
-        {
-            return true;
-        }
-        else return false;
+        return zBuffer[x + y * width] < value;
     }
 
     public double[] getZBuffer()

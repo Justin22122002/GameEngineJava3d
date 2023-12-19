@@ -335,9 +335,25 @@ public class GamePanel extends JPanel implements Runnable
                         triProjection.vec3D = mat.multiplyMatrixVector(clipped[n].vec3D, matProj);
                         triProjection.vec3D2 = mat.multiplyMatrixVector(clipped[n].vec3D2, matProj);
                         triProjection.vec3D3 = mat.multiplyMatrixVector(clipped[n].vec3D3, matProj);
-                        triProjection.vec2D = (Vec2D)clipped[n].vec2D.clone();
-                        triProjection.vec2D2 = (Vec2D)clipped[n].vec2D2.clone();
-                        triProjection.vec2D3 = (Vec2D)clipped[n].vec2D3.clone();
+                        triProjection.vec2D = (Vec2D) clipped[n].vec2D.clone();
+                        triProjection.vec2D2 = (Vec2D) clipped[n].vec2D2.clone();
+                        triProjection.vec2D3 = (Vec2D) clipped[n].vec2D3.clone();
+
+                        // scale texture c
+                        triProjection.vec2D.u = triProjection.vec2D.u / triProjection.vec3D.w;
+                        triProjection.vec2D2.u = triProjection.vec2D2.u / triProjection.vec3D2.w;
+                        triProjection.vec2D3.u = triProjection.vec2D3.u / triProjection.vec3D3.w;
+                        triProjection.vec2D.v = triProjection.vec2D.v / triProjection.vec3D.w;
+                        triProjection.vec2D2.v = triProjection.vec2D2.v / triProjection.vec3D2.w;
+                        triProjection.vec2D3.v = triProjection.vec2D3.v / triProjection.vec3D3.w;
+
+                        triProjection.vec2D.w = 1.0d / triProjection.vec3D.w;
+                        triProjection.vec2D2.w = 1.0d / triProjection.vec3D2.w;
+                        triProjection.vec2D3.w = 1.0d / triProjection.vec3D3.w;
+
+                        triProjection.vec3D = line1.divideVector(triProjection.vec3D, triProjection.vec3D.w);
+                        triProjection.vec3D2 = line1.divideVector(triProjection.vec3D2, triProjection.vec3D2.w);
+                        triProjection.vec3D3 = line1.divideVector(triProjection.vec3D3, triProjection.vec3D3.w);
 
                         // scale into view
                         triProjection.vec3D.x += 1.0;
@@ -365,7 +381,7 @@ public class GamePanel extends JPanel implements Runnable
                 }
             }
 
-            // sort them by the distance from the camera
+            // sort them by the distance from the camera -> with the death buffer we dont need to sort them anymore
             vecTrianglesToRaster.sort((o1, o2) ->
             {
                 double z1 = (o1.vec3D.z + o1.vec3D2.z + o1.vec3D3.z) / 3.0;
@@ -386,7 +402,7 @@ public class GamePanel extends JPanel implements Runnable
 
                 for (int p = 0; p < 4; p++)
                 {
-                    int trisToAdd = 0;
+                    int trisToAdd;
 
                     while (nNewTriangles > 0)
                     {
