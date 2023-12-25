@@ -18,21 +18,12 @@ public class Matrix
 
     public Vec3D multiplyMatrixVector(Vec3D in, Matrix m)
     {
-        Vec3D out = new Vec3D(0, 0, 0);
+        Vec3D out = new Vec3D();
 
-        out.x = in.x * m.matrix[0][0] + in.y * m.matrix[1][0] + in.z * m.matrix[2][0] + m.matrix[3][0];
-        out.y = in.x * m.matrix[0][1] + in.y * m.matrix[1][1] + in.z * m.matrix[2][1] + m.matrix[3][1];
-        out.z = in.x * m.matrix[0][2] + in.y * m.matrix[1][2] + in.z * m.matrix[2][2] + m.matrix[3][2];
-
-        double w = in.x * m.matrix[0][3] + in.y * m.matrix[1][3] + in.z * m.matrix[2][3] + m.matrix[3][3];
-
-        // If w is not 1, normalize the result
-        if (w != 1.0)
-        {
-            out.x /= w;
-            out.y /= w;
-            out.z /= w;
-        }
+        out.x = in.x * m.matrix[0][0] + in.y * m.matrix[1][0] + in.z * m.matrix[2][0] + in.w * m.matrix[3][0];
+        out.y = in.x * m.matrix[0][1] + in.y * m.matrix[1][1] + in.z * m.matrix[2][1] + in.w * m.matrix[3][1];
+        out.z = in.x * m.matrix[0][2] + in.y * m.matrix[1][2] + in.z * m.matrix[2][2] + in.w * m.matrix[3][2];
+        out.w = in.x * m.matrix[0][3] + in.y * m.matrix[1][3] + in.z * m.matrix[2][3] + in.w * m.matrix[3][3];
 
         return out;
     }

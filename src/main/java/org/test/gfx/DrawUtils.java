@@ -1,30 +1,18 @@
 package org.test.gfx;
 
-import java.awt.*;
-import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
-
 import static org.test.Main.getImageHeight;
 import static org.test.Main.getImageWidth;
-import static org.test.gfx.ColorUtils.*;
+import static org.test.gfx.ColorUtils.CD_GRAY;
+import static org.test.gfx.ColorUtils.CD_WHITE;
+import static org.test.gfx.ColorUtils.blend;
+import static org.test.gfx.ColorUtils.dotColor;
+
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public class DrawUtils
 {
-    public static void drawTriangle(Graphics2D g2, double x1, double y1, double x2, double y2, double x3, double y3)
-    {
-        // g2.setStroke(new BasicStroke(2));
-        g2.draw(new Line2D.Double(x1, y1, x2, y2));
-        g2.draw(new Line2D.Double(x2, y2, x3, y3));
-        g2.draw(new Line2D.Double(x3, y3, x1, y1));
-    }
-
-    public static void slDrawTriangle(int[] pixels, int x1, int y1, int x2, int y2, int x3, int y3, int col)
-    {
-        slDrawLine(pixels, x1, y1, x2, y2, col);
-        slDrawLine(pixels, x2, y2, x3, y3, col);
-        slDrawLine(pixels, x3, y3, x1, y1, col);
-    }
-
     public static void draw(int[] pixels, int x, int y, int col)
     {
         if (x >= 0 && y >= 0 && x < getImageWidth() - 1 && y < getImageHeight() - 1)
@@ -33,26 +21,11 @@ public class DrawUtils
         }
     }
 
-    public static void slFill(int[] pixels, int col)
+    public static void slDrawTriangle(int[] pixels, int x1, int y1, int x2, int y2, int x3, int y3, int col)
     {
-        for (int y = 0; y < getImageHeight(); y++)
-        {
-            for (int x = 0; x < getImageWidth(); x++)
-            {
-                pixels[x + y * (int) getImageWidth()] = col;
-            }
-        }
-    }
-
-    public static void slFillRect(int[] pixels, int x, int y, int width, int height, int col)
-    {
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                draw(pixels, i + x, j + y, col);
-            }
-        }
+        slDrawLine(pixels, x1, y1, x2, y2, col);
+        slDrawLine(pixels, x2, y2, x3, y3, col);
+        slDrawLine(pixels, x3, y3, x1, y1, col);
     }
 
     public static void slDrawLine(int[] pixels, int x0, int y0, int x1, int y1, int color)
@@ -110,6 +83,28 @@ public class DrawUtils
         }
     }
 
+    public static void slFill(int[] pixels, int col)
+    {
+        for (int y = 0; y < getImageHeight(); y++)
+        {
+            for (int x = 0; x < getImageWidth(); x++)
+            {
+                pixels[x + y * (int) getImageWidth()] = col;
+            }
+        }
+    }
+
+    public static void slFillRect(int[] pixels, int x, int y, int width, int height, int col)
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                draw(pixels, i + x, j + y, col);
+            }
+        }
+    }
+
     public static void slFillTriangle(int[] canvas, int x1, int y1, int x2, int y2, int x3, int y3, int col)
     {
         int t1x = 0, t2x = 0, y = 0, minx = 0, maxx = 0, t1xp = 0, t2xp = 0;
@@ -148,7 +143,7 @@ public class DrawUtils
 
         t1x = t2x = x1;
         y = y1;   // Starting points
-        dx1 = (int) (x2 - x1);
+        dx1 = (x2 - x1);
         if (dx1 < 0)
         {
             dx1 = -dx1;
@@ -473,15 +468,15 @@ public class DrawUtils
                 tex_v = tex_sv;
                 tex_w = tex_sw;
 
-                double tstep = 1.0f / (double) (bx - ax);
-                double t = 0.0f;
+                double tstep = 1.0 / (double) (bx - ax);
+                double t = 0.0;
 
 
                 for (int j = ax; j < bx; j++)
                 {
-                    tex_u = (1.0f - t) * tex_su + t * tex_eu;
-                    tex_v = (1.0f - t) * tex_sv + t * tex_ev;
-                    tex_w = (1.0f - t) * tex_sw + t * tex_ew;
+                    tex_u = (1.0 - t) * tex_su + t * tex_eu;
+                    tex_v = (1.0 - t) * tex_sv + t * tex_ev;
+                    tex_w = (1.0 - t) * tex_sw + t * tex_ew;
 
                     if (zBuffer.checkDepth(j, i, Math.abs(tex_w)))
                     {
@@ -489,11 +484,11 @@ public class DrawUtils
                         int iv = (int) ((tex_v / tex_w) * tex.getHeight()) & tex.getHeightMask();
                         int col = tex.getTexArray()[iu + (iv << tex.getWidthShift())];
 
-                        int backgroundColor = blend(CD_GRAY, CD_WHITE, 0.4f);
+                        int backgroundColor = blend(CD_GRAY, CD_WHITE, 0.4);
 
                         if (fog)
                         {
-                            col = blend(backgroundColor, col, (double) visibility);
+                            col = blend(backgroundColor, col, visibility);
                         }
 
                         if (directionLighting)
@@ -567,14 +562,14 @@ public class DrawUtils
                 tex_v = tex_sv;
                 tex_w = tex_sw;
 
-                double tstep = 1.0f / (double) (bx - ax);
-                double t = 0.0f;
+                double tstep = 1.0 / (double) (bx - ax);
+                double t = 0.0;
 
                 for (int j = ax; j < bx; j++)
                 {
-                    tex_u = (1.0f - t) * tex_su + t * tex_eu;
-                    tex_v = (1.0f - t) * tex_sv + t * tex_ev;
-                    tex_w = (1.0f - t) * tex_sw + t * tex_ew;
+                    tex_u = (1.0 - t) * tex_su + t * tex_eu;
+                    tex_v = (1.0 - t) * tex_sv + t * tex_ev;
+                    tex_w = (1.0 - t) * tex_sw + t * tex_ew;
 
                     if (zBuffer.checkDepth(j, i, Math.abs(tex_w)))
                     {
@@ -582,7 +577,7 @@ public class DrawUtils
                         int iv = (int) ((tex_v / tex_w) * tex.getHeight()) & tex.getHeightMask();
                         int col = tex.getTexArray()[iu + (iv << tex.getWidthShift())];
 
-                        int backgroundColor = blend(CD_GRAY, CD_WHITE, 0.4f);
+                        int backgroundColor = blend(CD_GRAY, CD_WHITE, 0.4);
 
                         if (fog)
                         {
@@ -606,6 +601,20 @@ public class DrawUtils
         }
     }
 
+    public static void slBlendTexture(Texture sprite, int col, double factor)
+    {
+        for (int y = 0; y < sprite.getHeight(); y++)
+        {
+            for (int x = 0; x < sprite.getWidth(); x++)
+            {
+                if (sprite.getPixel(x, y) != 0)
+                {
+                    sprite.setPixel(x, y, blend(sprite.getPixel(x, y), col, factor));
+                }
+            }
+        }
+    }
+
     public static BufferedImage toBufferedImage(Image img)
     {
         if (img instanceof BufferedImage)
@@ -624,4 +633,5 @@ public class DrawUtils
         // Return the buffered image
         return bimage;
     }
+
 }

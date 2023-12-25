@@ -256,21 +256,21 @@ public class GamePanel extends JPanel implements Runnable
 
         List<Triangle> vecTrianglesToRaster = new ArrayList<>();
 
+        Vec3D vUp = new Vec3D(0, 1, 0);
+        Vec3D vTarget = new Vec3D(0, 0, 1);
+        Matrix matCameraRot = mat.matrixMatrixMultiplication(mat.rotateMatrixX(fPitch), mat.rotateMatrixY(fYaw));
+        vLookDir = mat.multiplyMatrixVector(vTarget, matCameraRot);
+        vTarget = vTarget.addVector(vCamera, vLookDir);
+
+        // using the information provided above to define a camera matrix
+        Matrix matCamera = new Matrix();
+        matCamera = matCamera.pointAtMatrix(vCamera, vTarget, vUp);
+
+        Matrix matView = new Matrix();
+        matView = matView.inverseMatrix(matCamera);
+
         for(Mesh meshCube: polygonGroup.getPolyGroup())
         {
-            Vec3D vUp = new Vec3D(0, 1, 0);
-            Vec3D vTarget = new Vec3D(0, 0, 1);
-            Matrix matCameraRot = mat.matrixMatrixMultiplication(mat.rotateMatrixX(fPitch), mat.rotateMatrixY(fYaw));
-            vLookDir = mat.multiplyMatrixVector(vTarget, matCameraRot);
-            vTarget = vTarget.addVector(vCamera, vLookDir);
-
-            // using the information provided above to define a camera matrix
-            Matrix matCamera = new Matrix();
-            matCamera = matCamera.pointAtMatrix(vCamera, vTarget, vUp);
-
-            Matrix matView = new Matrix();
-            matView = matView.inverseMatrix(matCamera);
-
             for (Triangle tri : meshCube.triangles)
             {
                 Triangle triProjection = new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0));
@@ -382,13 +382,13 @@ public class GamePanel extends JPanel implements Runnable
             }
 
             // sort them by the distance from the camera -> with the death buffer we dont need to sort them anymore
-            vecTrianglesToRaster.sort((o1, o2) ->
-            {
-                double z1 = (o1.vec3D.z + o1.vec3D2.z + o1.vec3D3.z) / 3.0;
-                double z2 = (o2.vec3D.z + o2.vec3D2.z + o2.vec3D3.z) / 3.0;
-
-                return (z1 > z2) ? 1 : (z1 == z2) ? 0 : -1;
-            });
+            //vecTrianglesToRaster.sort((o1, o2) ->
+            //{
+            //    double z1 = (o1.vec3D.z + o1.vec3D2.z + o1.vec3D3.z) / 3.0;
+            //    double z2 = (o2.vec3D.z + o2.vec3D2.z + o2.vec3D3.z) / 3.0;
+            //
+            //    return Double.compare(z1, z2);
+            //});
 
             zBuffer.resetBuffer();
 

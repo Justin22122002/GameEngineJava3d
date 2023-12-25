@@ -2,9 +2,9 @@ package org.test.gfx;
 
 public class ZBuffer
 {
-    private int width;
-    private int height;
-    private double[] zBuffer;
+    private final int width;
+    private final int height;
+    private final double[] zBuffer;
 
     public ZBuffer(int width, int height)
     {
@@ -18,7 +18,7 @@ public class ZBuffer
     {
         for(int x = 0; x < width * height; x++)
         {
-            zBuffer[x] = 0.0f;
+            zBuffer[x] = 0.0;
         }
     }
 
@@ -39,7 +39,11 @@ public class ZBuffer
             return false;
         }
 
-        return zBuffer[x + y * width] < value;
+        if(zBuffer[x + y * width] < value)
+        {
+            return true;
+        }
+        else return false;
     }
 
     public double[] getZBuffer()
