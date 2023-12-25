@@ -63,7 +63,7 @@ public class Matrix
                 {
                         {a * fFov, 0, 0, 0},
                         {0, fFov, 0, 0},
-                        {0, 0, fFar / (fFar - fNear), (- fFar * fNear) / (fFar - fNear)},
+                        {0, 0, fFar / (fFar - fNear), (-fFar * fNear) / (fFar - fNear)},
                         {0, 0, 1.0, 0}
                 };
 
@@ -266,31 +266,26 @@ public class Matrix
         return new Matrix(matrix);
     }
 
+
     public Matrix inverseMatrix(Matrix m)
     {
-        Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
-        mat.matrix[0][0] = m.matrix[0][0];
-        mat.matrix[0][1] = m.matrix[1][0];
-        mat.matrix[0][2] = m.matrix[2][0];
-        mat.matrix[0][3] = 0.0;
-
-        mat.matrix[1][0] = m.matrix[0][1];
-        mat.matrix[1][1] = m.matrix[1][1];
-        mat.matrix[1][2] = m.matrix[2][1];
-        mat.matrix[1][3] = 0.0;
-
-        mat.matrix[2][0] = m.matrix[0][2];
-        mat.matrix[2][1] = m.matrix[1][2];
-        mat.matrix[2][2] = m.matrix[2][2];
-        mat.matrix[2][3] = 0.0;
-
-        mat.matrix[3][0] = -(m.matrix[3][0] * mat.matrix[0][0] + m.matrix[3][1] * mat.matrix[1][0] + m.matrix[3][2] * mat.matrix[2][0]);
-        mat.matrix[3][1] = -(m.matrix[3][0] * mat.matrix[0][1] + m.matrix[3][1] * mat.matrix[1][1] + m.matrix[3][2] * mat.matrix[2][1]);
-        mat.matrix[3][2] = -(m.matrix[3][0] * mat.matrix[0][2] + m.matrix[3][1] * mat.matrix[1][2] + m.matrix[3][2] * mat.matrix[2][2]);
-        mat.matrix[3][3] = 1.0;
+        // Erstelle eine neue Matrix, um die Inverse zu speichern
+        Matrix mat = new Matrix(new double[][]
+                {
+                        {m.matrix[0][0], m.matrix[1][0], m.matrix[2][0], 0.0},
+                        {m.matrix[0][1], m.matrix[1][1], m.matrix[2][1], 0.0},
+                        {m.matrix[0][2], m.matrix[1][2], m.matrix[2][2], 0.0},
+                        {
+                                -(m.matrix[3][0] * m.matrix[0][0] + m.matrix[3][1] * m.matrix[0][1] + m.matrix[3][2] * m.matrix[0][2]),
+                                -(m.matrix[3][0] * m.matrix[1][0] + m.matrix[3][1] * m.matrix[1][1] + m.matrix[3][2] * m.matrix[1][2]),
+                                -(m.matrix[3][0] * m.matrix[2][0] + m.matrix[3][1] * m.matrix[2][1] + m.matrix[3][2] * m.matrix[2][2]),
+                                1.0
+                        }
+                });
 
         return mat;
     }
+
 
     @Override
     public String toString()

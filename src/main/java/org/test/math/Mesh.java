@@ -75,28 +75,42 @@ public class Mesh
                     String[] spl1 = split[1].split(Pattern.quote("/"));
                     String[] spl2 = split[2].split(Pattern.quote("/"));
                     String[] spl3 = split[3].split(Pattern.quote("/"));
-                    Triangle tri = new Triangle(
-                            new Vec3D(
-                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
-                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
-                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[2]),
-                            new Vec3D(
-                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
-                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
-                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[2]),
-                            new Vec3D(
-                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
-                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
-                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[2]),
-                            new Vec2D(
-                                    texs.get(Integer.parseInt(spl1[1]) - 1)[0],
-                                    texs.get(Integer.parseInt(spl1[1]) - 1)[1]),
-                            new Vec2D(
-                                    texs.get(Integer.parseInt(spl2[1]) - 1)[0],
-                                    texs.get(Integer.parseInt(spl2[1]) - 1)[1]),
-                            new Vec2D(
-                                    texs.get(Integer.parseInt(spl3[1]) - 1)[0],
-                                    texs.get(Integer.parseInt(spl3[1]) - 1)[1]));
+                    Triangle tri = new Triangle
+                            (
+                                    new Vec3D
+                                            (
+                                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
+                                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
+                                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[2]
+                                            ),
+                                    new Vec3D
+                                            (
+                                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
+                                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
+                                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[2]
+                                            ),
+                                    new Vec3D
+                                            (
+                                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
+                                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
+                                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[2]
+                                            ),
+                                    new Vec2D
+                                            (
+                                                    texs.get(Integer.parseInt(spl1[1]) - 1)[0],
+                                                    texs.get(Integer.parseInt(spl1[1]) - 1)[1]
+                                            ),
+                                    new Vec2D
+                                            (
+                                                    texs.get(Integer.parseInt(spl2[1]) - 1)[0],
+                                                    texs.get(Integer.parseInt(spl2[1]) - 1)[1]
+                                            ),
+                                    new Vec2D
+                                            (
+                                                    texs.get(Integer.parseInt(spl3[1]) - 1)[0],
+                                                    texs.get(Integer.parseInt(spl3[1]) - 1)[1]
+                                            )
+                            );
                     tris.add(tri);
                 }
                 else
@@ -104,23 +118,27 @@ public class Mesh
                     String[] spl1 = split[1].split(Pattern.quote("/"));
                     String[] spl2 = split[2].split(Pattern.quote("/"));
                     String[] spl3 = split[3].split(Pattern.quote("/"));
-                    Triangle tri = new Triangle(
-                            new Vec3D(
-                                    -vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
-                                    -vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
-                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[2]
-                            ),
-                            new Vec3D(
-                                    -vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
-                                    -vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
-                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[2]
-                            ),
-                            new Vec3D(
-                                    -vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
-                                    -vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
-                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[2]
-                            )
-                    );
+                    Triangle tri = new Triangle
+                            (
+                                    new Vec3D
+                                            (
+                                                    -vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
+                                                    -vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
+                                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[2]
+                                            ),
+                                    new Vec3D
+                                            (
+                                                    -vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
+                                                    -vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
+                                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[2]
+                                            ),
+                                    new Vec3D
+                                            (
+                                                    -vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
+                                                    -vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
+                                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[2]
+                                            )
+                            );
                     tris.add(tri);
                 }
             }
