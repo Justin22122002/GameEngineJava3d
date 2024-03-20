@@ -2,20 +2,37 @@ package org.test.math;
 
 import java.util.Arrays;
 
-public class Matrix
+/**
+ * Represents a 4x4 matrix.
+ */
+public class Matrix implements Cloneable
 {
     // should be a 4 * 4 Matrix
     double[][] matrix;
 
+    /**
+     * Constructs a new Matrix4x4 with the given matrix data.
+     *
+     * @param matrix The 4x4 matrix data.
+     */
     public Matrix(double[][] matrix)
     {
         this.matrix = matrix;
     }
 
+    /**
+     * Constructs a new empty Matrix4x4.
+     */
     public Matrix()
     {
     }
 
+    /**
+     * Multiplies a vector by this matrix.
+     *
+     * @param in The input vector.
+     * @return The resulting vector after multiplication.
+     */
     public Vec3D multiplyMatrixVector(Vec3D in)
     {
         Vec3D out = new Vec3D();
@@ -28,6 +45,15 @@ public class Matrix
         return out;
     }
 
+    /**
+     * Creates a projection matrix based on the given parameters.
+     *
+     * @param fNear The distance to the near plane.
+     * @param fFar  The distance to the far plane.
+     * @param a     The aspect ratio.
+     * @param fov   The field of view angle in degrees.
+     * @return This Matrix4x4 instance with the projection matrix.
+     */
     public static Matrix projektionMatrix(double fNear, double fFar, double a, double fov)
     {
         double fFov = 1.0 / Math.tan(fov * 0.5 / Math.PI * 180.0);
@@ -43,6 +69,12 @@ public class Matrix
         return new Matrix(matrix);
     }
 
+    /**
+     * Creates a rotation matrix around the X-axis based on the given angle.
+     *
+     * @param angle The rotation angle in radians around the X-axis.
+     * @return This Matrix4x4 instance with the rotation matrix.
+     */
     public static Matrix rotateMatrixX(double angle)
     {
         double[][] matrix = new double[][]
@@ -56,6 +88,12 @@ public class Matrix
         return new Matrix(matrix);
     }
 
+    /**
+     * Creates a rotation matrix around the Y-axis based on the given angle.
+     *
+     * @param angle The rotation angle in radians around the Y-axis.
+     * @return This Matrix4x4 instance with the rotation matrix.
+     */
     public static Matrix rotateMatrixY(double angle)
     {
         double[][] matrix = new double[][]
@@ -69,6 +107,12 @@ public class Matrix
         return new Matrix(matrix);
     }
 
+    /**
+     * Creates a rotation matrix around the Z-axis based on the given angle.
+     *
+     * @param angle The rotation angle in radians around the Z-axis.
+     * @return This Matrix4x4 instance with the rotation matrix.
+     */
     public static Matrix rotateMatrixZ(double angle)
     {
         double[][] matrix = new double[][]
@@ -82,6 +126,11 @@ public class Matrix
         return new Matrix(matrix);
     }
 
+    /**
+     * Creates an identity matrix.
+     *
+     * @return This Matrix4x4 instance with the identity matrix.
+     */
     public static Matrix identityMatrix()
     {
         double[][] matrix = new double[][]
@@ -95,6 +144,14 @@ public class Matrix
         return new Matrix(matrix);
     }
 
+    /**
+     * Creates a translation matrix based on the given translations.
+     *
+     * @param x The translation in the x direction.
+     * @param y The translation in the y direction.
+     * @param z The translation in the z direction.
+     * @return This Matrix4x4 instance with the translation matrix.
+     */
     public static Matrix translationMatrix(double x, double y, double z)
     {
         double[][] matrix = new double[][]
@@ -108,6 +165,12 @@ public class Matrix
         return new Matrix(matrix);
     }
 
+    /**
+     * Multiplies this matrix by another matrix and returns the result.
+     *
+     * @param m The matrix to be multiplied with this matrix.
+     * @return The resulting matrix of the multiplication.
+     */
     public Matrix matrixMatrixMultiplication(Matrix m)
     {
         Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
@@ -130,6 +193,15 @@ public class Matrix
         return mat;
     }
 
+    /**
+     * Constructs a matrix that represents a transformation to align an object's orientation from a given position to a target position,
+     * with a specified up vector.
+     *
+     * @param pos    The current position of the object.
+     * @param target The target position where the object should be oriented towards.
+     * @param up     The up vector specifying the orientation of the object.
+     * @return The transformation matrix.
+     */
     public Matrix pointAtMatrix(Vec3D pos, Vec3D target, Vec3D up)
     {
         // CALCULATE THE NEW FORWARD DIRECTION
@@ -162,7 +234,12 @@ public class Matrix
         return new Matrix(matrix);
     }
 
-
+    /**
+     * Calculates the inverse of this matrix.
+     *
+     * @return The inverse of this matrix.
+     * @throws ArithmeticException if the matrix is singular and does not have an inverse.
+     */
     public Matrix inverseMatrix()
     {
         return new Matrix(new double[][]
@@ -179,7 +256,6 @@ public class Matrix
                 });
     }
 
-
     @Override
     public String toString()
     {
@@ -193,5 +269,35 @@ public class Matrix
         result.append("}");
 
         return result.toString();
+    }
+
+
+    @Override
+    public Matrix clone()
+    {
+        try
+        {
+            Matrix clone = (Matrix) super.clone();
+            return clone;
+        }
+        catch (CloneNotSupportedException e)
+        {
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Matrix matrix4x4 = (Matrix) o;
+        return Arrays.deepEquals(matrix, matrix4x4.matrix);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Arrays.deepHashCode(matrix);
     }
 }
