@@ -149,15 +149,15 @@ public class DrawUtils
             dx1 = -dx1;
             signx1 = -1;
         } else signx1 = 1;
-        dy1 = (int) (y2 - y1);
+        dy1 = y2 - y1;
 
-        dx2 = (int) (x3 - x1);
+        dx2 = x3 - x1;
         if (dx2 < 0)
         {
             dx2 = -dx2;
             signx2 = -1;
         } else signx2 = 1;
-        dy2 = (int) (y3 - y1);
+        dy2 = y3 - y1;
 
         if (dy1 > dx1)
         {   // swap values
@@ -174,13 +174,12 @@ public class DrawUtils
             changed2 = true;
         }
 
-        e2 = (int) (dx2 >> 1);
+        e2 = dx2 >> 1;
         // Flat top, just process the second half
-        boolean goNext = false;
-        if (y1 == y2) goNext = true;
+        boolean goNext = y1 == y2;
         if (!goNext)
         {
-            e1 = (int) (dx1 >> 1);
+            e1 = dx1 >> 1;
 
             for (int i = 0; i < dx1; )
             {
@@ -204,7 +203,7 @@ public class DrawUtils
                     while (e1 >= dx1)
                     {
                         e1 -= dx1;
-                        if (changed1) t1xp = signx1;//t1x += signx1;
+                        if (changed1) t1xp = signx1;
                         else break loop3;
                     }
                     if (changed1) break;
@@ -219,7 +218,7 @@ public class DrawUtils
                     while (e2 >= dx2)
                     {
                         e2 -= dx2;
-                        if (changed2) t2xp = signx2;//t2x += signx2;
+                        if (changed2) t2xp = signx2;
                         else break loop2;
                     }
                     if (changed2) break;
@@ -241,13 +240,13 @@ public class DrawUtils
             }
         }
         // Second half
-        dx1 = (int) (x3 - x2);
+        dx1 = x3 - x2;
         if (dx1 < 0)
         {
             dx1 = -dx1;
             signx1 = -1;
         } else signx1 = 1;
-        dy1 = (int) (y3 - y2);
+        dy1 = y3 - y2;
         t1x = x2;
 
         if (dy1 > dx1)
@@ -258,7 +257,7 @@ public class DrawUtils
             changed1 = true;
         } else changed1 = false;
 
-        e1 = (int) (dx1 >> 1);
+        e1 = dx1 >> 1;
 
         for (int i = 0; i <= dx1; i++)
         {
@@ -285,12 +284,12 @@ public class DrawUtils
                     {
                         t1xp = signx1;
                         break;
-                    }//t1x += signx1;
+                    }
                     else break loop3;
                 }
                 if (changed1) break;
                 else t1x += signx1;
-                if (i < dx1) i++;
+                i++;
             }
             // process second line until y value is about to change
             loop2:
@@ -328,10 +327,21 @@ public class DrawUtils
         }
     }
 
-    public static void TexturedTriangle(Graphics2D g2, int x1, int y1, double u1, double v1, double w1, int x2, int y2, double
-            u2, double v2, double w2, int x3, int y3, double u3, double v3, double w3, Texture tex, double visibility, boolean fog, boolean directionLighting, int[] pix, ZBuffer zBuffer, int[] texArray, double dp)
+    public static void TexturedTriangle
+            (
+                    int x1, int y1,
+                    double u1, double v1, double w1,
+                    int x2, int y2,
+                    double u2, double v2, double w2,
+                    int x3, int y3,
+                    double u3, double v3, double w3,
+                    Texture tex,
+                    double visibility,
+                    boolean fog,
+                    boolean directionLighting,
+                    int[] pix, ZBuffer zBuffer,
+                    double dp)
     {
-
         if (y2 < y1)
         {
             int temp = y1;
@@ -464,13 +474,8 @@ public class DrawUtils
                     tex_ew = tempw;
                 }
 
-                tex_u = tex_su;
-                tex_v = tex_sv;
-                tex_w = tex_sw;
-
                 double tstep = 1.0 / (double) (bx - ax);
                 double t = 0.0;
-
 
                 for (int j = ax; j < bx; j++)
                 {
@@ -558,10 +563,6 @@ public class DrawUtils
                     tex_ew = tempw;
                 }
 
-                tex_u = tex_su;
-                tex_v = tex_sv;
-                tex_w = tex_sw;
-
                 double tstep = 1.0 / (double) (bx - ax);
                 double t = 0.0;
 
@@ -581,7 +582,7 @@ public class DrawUtils
 
                         if (fog)
                         {
-                            col = blend(backgroundColor, col, (double) visibility);
+                            col = blend(backgroundColor, col, visibility);
                         }
 
                         if (directionLighting)
@@ -623,15 +624,14 @@ public class DrawUtils
         }
 
         // Create a buffered image with transparency
-        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
         // Draw the image on to the buffered image
-        Graphics2D bGr = bimage.createGraphics();
+        Graphics2D bGr = bufferedImage.createGraphics();
         bGr.drawImage(img, 0, 0, null);
         bGr.dispose();
 
         // Return the buffered image
-        return bimage;
+        return bufferedImage;
     }
-
 }

@@ -6,6 +6,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.Objects;
 
+/**
+ * Represents a texture used in graphics rendering.
+ */
 public class Texture
 {
     private final int width;
@@ -15,6 +18,11 @@ public class Texture
     private int widthShift;
     private int[] texArray;
 
+    /**
+     * Constructs a texture from a BufferedImage.
+     *
+     * @param img The BufferedImage representing the texture.
+     */
     public Texture(BufferedImage img)
     {
         this.width = img.getWidth();
@@ -35,6 +43,11 @@ public class Texture
         widthShift = countBits(getWidth()-1);
     }
 
+    /**
+     * Creates a texture from an image file.
+     *
+     * @param fileName The path to the image file.
+     */
     public void createTexture(String fileName)
     {
         BufferedImage img = new BufferedImage(0, 0, BufferedImage.TYPE_INT_RGB);
@@ -48,7 +61,7 @@ public class Texture
             e.printStackTrace();
         }
 
-        if(!isPowerOfTwo(img.getWidth()) || !isPowerOfTwo(img.getHeight()))
+        if(isPowerOfTwo(img.getWidth()) || isPowerOfTwo(img.getHeight()))
         {
             throw new IllegalArgumentException("Current texture width or height is not a power of 2 which slows down performance. Resize to power of two");
         }
@@ -67,13 +80,22 @@ public class Texture
         widthShift = countBits(getWidth()-1);
     }
 
+    /**
+     * Checks if a given number is a power of two.
+     *
+     * @param n The number to check.
+     * @return True if the number is a power of two, otherwise false.
+     */
     public static boolean isPowerOfTwo(int n)
     {
-        return ((n & (n-1)) == 0);
+        return ((n & (n - 1)) != 0);
     }
 
     /**
-     Counts the number of "on" bits in an integer.
+     * Counts the number of set bits in an integer.
+     *
+     * @param n The integer to count bits.
+     * @return The number of set bits.
      */
     public static int countBits(int n)
     {
@@ -85,11 +107,26 @@ public class Texture
         return count;
     }
 
+    /**
+     * Gets the pixel color at the specified coordinates.
+     *
+     * @param x The x-coordinate of the pixel.
+     * @param y The y-coordinate of the pixel.
+     * @return The color of the pixel.
+     */
     public int getPixel(int x, int y)
     {
         return texArray[x + y * getWidth()];
     }
 
+    /**
+     * Sets the color of the pixel at the specified coordinates.
+     *
+     * @param x   The x-coordinate of the pixel.
+     * @param y   The y-coordinate of the pixel.
+     * @param col The color to set.
+     * @return The updated color of the pixel.
+     */
     public int setPixel(int x, int y, int col)
     {
         return texArray[x + y * getWidth()] = col;

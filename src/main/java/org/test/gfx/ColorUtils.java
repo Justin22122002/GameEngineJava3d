@@ -1,115 +1,103 @@
 package org.test.gfx;
 
+/**
+ * Utility class for manipulating color values in Java.
+ */
 public class ColorUtils
 {
-    //CLASS MEANT TO BE FAST, COMPACT STORAGE UNIT FOR CONTAINING
-    //AND MANIPULATING COLOR VALUES OF A PARTICULAR PIXEL IN JAVA.
+    // Color constants
     public static final int CD_BLACK = 0x000000;
-
     public static final int CD_WHITE = 0xffffff;
-
     public static final int CD_RED = 0xff0000;
-
     public static final int CD_GREEN = 0x00ff00;
-
     public static final int CD_BLUE = 0x0000ff;
-
     public static final int CD_ORANGE = 0xFFA500;
-
     public static final int CD_GRAY = 0xFF808080;
-
     public static final int CD_YELLOW = -256;
 
+    /**
+     * Mixes two colors together by adding their components.
+     *
+     * @param col  The first color.
+     * @param col2 The second color.
+     * @return The mixed color.
+     */
     public static int mix(int col, int col2)
     {
-        int i1 = col;
-        int i2 = col2;
+        int[] rgba1 = getColorComponents(col);
+        int[] rgba2 = getColorComponents(col2);
 
-        int a1 = getA(i1);
-        int r1 = getR(i1);
-        int g1 = getG(i1);
-        int b1 = getB(i1);
+        int a = rgba1[0] + rgba2[0];
+        int r = rgba1[1] + rgba2[1];
+        int g = rgba1[2] + rgba2[2];
+        int b = rgba1[3] + rgba2[3];
 
-        int a2 = getA(i2);
-        int r2 = getR(i2);
-        int g2 = getG(i2);
-        int b2 = getB(i2);
-
-        int a = a1 + a2;
-        int r = r1 + r2;
-        int g = g1 + g2;
-        int b = b1 + b2;
-
-        return a << 24 | r << 16 | g << 8 | b;
+        return assembleColor(a, r, g, b);
     }
 
+    /**
+     * Multiplies two colors together by multiplying their components.
+     *
+     * @param col  The first color.
+     * @param col2 The second color.
+     * @return The multiplied color.
+     */
     public static int multiply(int col, int col2)
     {
-        int i1 = col;
-        int i2 = col2;
+        int[] rgba1 = getColorComponents(col);
+        int[] rgba2 = getColorComponents(col2);
 
-        int a1 = getA(i1);
-        int r1 = getR(i1);
-        int g1 = getG(i1);
-        int b1 = getB(i1);
+        int a = rgba1[0] * rgba2[0];
+        int r = rgba1[1] * rgba2[1];
+        int g = rgba1[2] * rgba2[2];
+        int b = rgba1[3] * rgba2[3];
 
-        int a2 = getA(i2);
-        int r2 = getR(i2);
-        int g2 = getG(i2);
-        int b2 = getB(i2);
-
-        int a = a1 * a2;
-        int r = r1 * r2;
-        int g = g1 * g2;
-        int b = b1 * b2;
-
-        return a << 24 | r << 16 | g << 8 | b;
+        return assembleColor(a, r, g, b);
     }
 
-    public static int dotColor(int col, double factor)
-    {
-        int i1 = col; //blend(col, blend(col, CD_RED, factor), factor);
-
-        int a1 = getA(i1);
-        int r1 = getR(i1);
-        int g1 = getG(i1);
-        int b1 = getB(i1);
-
-        int a = (int) (a1 * factor);
-        int r = (int) (r1 * factor);
-        int g = (int) (g1 * factor);
-        int b = (int) (b1 * factor);
-
-        return a << 24 | r << 16 | g << 8 | b;
-    }
-
+    /**
+     * Blends two colors together using a specified ratio.
+     *
+     * @param col   The first color.
+     * @param col2  The second color.
+     * @param ratio The blending ratio (0.0 to 1.0).
+     * @return The blended color.
+     */
     public static int blend(int col, int col2, double ratio)
     {
-        if (ratio > 1f) ratio = 1f;
-        else if (ratio < 0f) ratio = 0f;
-        double iRatio = 1.0f - ratio;
+        if (ratio > 1.0) ratio = 1.0;
+        else if (ratio < 0.0) ratio = 0.0;
+        double iRatio = 1.0 - ratio;
 
-        int i1 = col;
-        int i2 = col2;
+        int[] rgba1 = getColorComponents(col);
+        int[] rgba2 = getColorComponents(col2);
 
-        int a1 = getA(i1);
-        int r1 = getR(i1);
-        int g1 = getG(i1);
-        int b1 = getB(i1);
+        int a = (int) ((rgba1[0] * iRatio) + (rgba2[0] * ratio));
+        int r = (int) ((rgba1[1] * iRatio) + (rgba2[1] * ratio));
+        int g = (int) ((rgba1[2] * iRatio) + (rgba2[2] * ratio));
+        int b = (int) ((rgba1[3] * iRatio) + (rgba2[3] * ratio));
 
-        int a2 = getA(i2);
-        int r2 = getR(i2);
-        int g2 = getG(i2);
-        int b2 = getB(i2);
-
-        int a = (int) ((a1 * iRatio) + (a2 * ratio));
-        int r = (int) ((r1 * iRatio) + (r2 * ratio));
-        int g = (int) ((g1 * iRatio) + (g2 * ratio));
-        int b = (int) ((b1 * iRatio) + (b2 * ratio));
-
-        return a << 24 | r << 16 | g << 8 | b;
+        return assembleColor(a, r, g, b);
     }
 
+    /**
+     * Adjusts the color intensity by scaling each component with a given factor.
+     *
+     * @param col    The color.
+     * @param factor The scaling factor.
+     * @return The adjusted color.
+     */
+    public static int dotColor(int col, double factor)
+    {
+        int[] rgba = getColorComponents(col);
+
+        int a = (int) (rgba[0] * factor);
+        int r = (int) (rgba[1] * factor);
+        int g = (int) (rgba[2] * factor);
+        int b = (int) (rgba[3] * factor);
+
+        return assembleColor(a, r, g, b);
+    }
 
     /**
      * Extracts the alpha value (transparency) from an ARGB color value.
@@ -154,5 +142,33 @@ public class ColorUtils
     {
         return (col & 0xff);
     }
-}
+    /**
+     * Assembles an ARGB color value from individual color components.
+     *
+     * @param a The alpha component (transparency).
+     * @param r The red component.
+     * @param g The green component.
+     * @param b The blue component.
+     * @return The assembled ARGB color value.
+     */
+    private static int assembleColor(int a, int r, int g, int b)
+    {
+        return (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
+    }
 
+    /**
+     * Extracts the individual color components (ARGB) from a color value.
+     *
+     * @param col The ARGB color value.
+     * @return An array containing the alpha, red, green, and blue components.
+     */
+    private static int[] getColorComponents(int col)
+    {
+        int[] components = new int[4];
+        components[0] = (col >> 24) & 0xff; // Alpha
+        components[1] = (col >> 16) & 0xff; // Red
+        components[2] = (col >> 8) & 0xff; // Green
+        components[3] = col & 0xff; // Blue
+        return components;
+    }
+}

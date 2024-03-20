@@ -171,7 +171,7 @@ public class Matrix implements Cloneable
      * @param m The matrix to be multiplied with this matrix.
      * @return The resulting matrix of the multiplication.
      */
-    public Matrix matrixMatrixMultiplication(Matrix m)
+    public Matrix multiply(Matrix m)
     {
         Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
 
