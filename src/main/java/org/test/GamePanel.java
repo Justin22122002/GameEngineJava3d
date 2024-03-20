@@ -40,7 +40,7 @@ public class GamePanel extends JPanel implements Runnable
     double fov = 90.0; // flied of view
     double a = getImageHeight() / getImageWidth(); // aspect ratio of the window
     Matrix mat = new Matrix();
-    Matrix matProj = mat.projektionMatrix(fNear, fFar, a, fov); // projection matrix
+    Matrix matProj = Matrix.projektionMatrix(fNear, fFar, a, fov); // projection matrix
     Matrix matZ, matZX; // rotation matrix
     double fTheta; // angle used in rotation matrix
     Mesh meshCube; // collection of triangles that form an object
@@ -64,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable
 
         // This class is an implementation of the ImageProducer interface which uses an array
         // to produce pixel values for an Image.
-        mImageProducer =  new MemoryImageSource((int) getImageWidth(), (int) getImageHeight(), cm, pixels,0, (int) getImageWidth());
+        mImageProducer = new MemoryImageSource((int) getImageWidth(), (int) getImageHeight(), cm, pixels,0, (int) getImageWidth());
         mImageProducer.setAnimated(true);
         mImageProducer.setFullBufferUpdates(true);
         imageBuffer = Toolkit.getDefaultToolkit().createImage(mImageProducer);
@@ -177,16 +177,16 @@ public class GamePanel extends JPanel implements Runnable
 
     public void update()
     {
-        Vec3D vForward = vLookDir.normalizeVector(vLookDir); // Normalisierte Blickrichtung
+        Vec3D vForward = vLookDir.normalizeVector(); // Normalisierte Blickrichtung
 
         if (keyH.rightPressed)
         {
-            vCamera = vCamera.subtractVector(vCamera, vForward.crossProduct(vLookDir, new Vec3D(0, 0.1, 0)));
+            vCamera = vCamera.subtractVector(vForward.crossProduct(new Vec3D(0, 0.1, 0)));
         }
 
         if (keyH.leftPressed)
         {
-            vCamera = vCamera.addVector(vCamera, vForward.crossProduct(vLookDir, new Vec3D(0, 0.1, 0)));
+            vCamera = vCamera.addVector(vForward.crossProduct(new Vec3D(0, 0.1, 0)));
         }
 
         if (keyH.downPressed)
@@ -201,12 +201,12 @@ public class GamePanel extends JPanel implements Runnable
 
         if (keyH.frontPressed)
         {
-            vCamera = vCamera.addVector(vCamera, vForward);
+            vCamera = vCamera.addVector(vForward);
         }
 
         if (keyH.backPressed)
         {
-            vCamera = vCamera.subtractVector(vCamera, vForward);
+            vCamera = vCamera.subtractVector(vForward);
         }
 
         if (keyH.rightTurn)
@@ -242,32 +242,30 @@ public class GamePanel extends JPanel implements Runnable
 
         // rotation matrix
         // fTheta += 0.0002;
-        matZ = mat.rotateMatrixZ(fTheta * 0.5);
-        matZX = mat.rotateMatrixX(fTheta);
+        matZ = Matrix.rotateMatrixZ(fTheta * 0.5);
+        matZX = Matrix.rotateMatrixX(fTheta);
 
         // distance from cube -> translation matrix
-        Matrix trans = mat.translationMatrix(0, 0, 1);
+        Matrix trans = Matrix.translationMatrix(0, 0, 1);
 
         // Matrix Matrix multiplication to accumulate multiple transformations
-        Matrix matWorld;
-        matWorld = mat.identityMatrix();
-        matWorld = matWorld.matrixMatrixMultiplication(matZ, matZX);
-        matWorld = matWorld.matrixMatrixMultiplication(matWorld, trans);
+        Matrix matWorld = Matrix.identityMatrix();
+        matWorld = matZ.matrixMatrixMultiplication(matZX);
+        matWorld = matWorld.matrixMatrixMultiplication(trans);
 
         List<Triangle> vecTrianglesToRaster = new ArrayList<>();
 
         Vec3D vUp = new Vec3D(0, 1, 0);
         Vec3D vTarget = new Vec3D(0, 0, 1);
-        Matrix matCameraRot = mat.matrixMatrixMultiplication(mat.rotateMatrixX(fPitch), mat.rotateMatrixY(fYaw));
-        vLookDir = mat.multiplyMatrixVector(vTarget, matCameraRot);
-        vTarget = vTarget.addVector(vCamera, vLookDir);
+        Matrix matCameraRot = Matrix.rotateMatrixX(fPitch).matrixMatrixMultiplication(Matrix.rotateMatrixY(fYaw));
+        vLookDir = matCameraRot.multiplyMatrixVector(vTarget);
+        vTarget = vCamera.addVector(vLookDir);
 
         // using the information provided above to define a camera matrix
         Matrix matCamera = new Matrix();
         matCamera = matCamera.pointAtMatrix(vCamera, vTarget, vUp);
 
-        Matrix matView = new Matrix();
-        matView = matView.inverseMatrix(matCamera);
+        Matrix matView = matCamera.inverseMatrix();
 
         for(Mesh meshCube: polygonGroup.getPolyGroup())
         {
@@ -279,9 +277,9 @@ public class GamePanel extends JPanel implements Runnable
 
                 // assemble World Matrix
                 // TODO: extract method
-                triTrans.vec3D = mat.multiplyMatrixVector(tri.vec3D, matWorld);
-                triTrans.vec3D2 = mat.multiplyMatrixVector(tri.vec3D2, matWorld);
-                triTrans.vec3D3 = mat.multiplyMatrixVector(tri.vec3D3, matWorld);
+                triTrans.vec3D = matWorld.multiplyMatrixVector(tri.vec3D);
+                triTrans.vec3D2 = matWorld.multiplyMatrixVector(tri.vec3D2);
+                triTrans.vec3D3 = matWorld.multiplyMatrixVector(tri.vec3D3);
                 triTrans.vec2D = tri.vec2D;
                 triTrans.vec2D2 = tri.vec2D2;
                 triTrans.vec2D3 = tri.vec2D3;
@@ -291,36 +289,36 @@ public class GamePanel extends JPanel implements Runnable
                 Vec3D line1 = new Vec3D(0, 0, 0);
                 Vec3D line2 = new Vec3D(0, 0, 0);
 
-                line1 = line1.subtractVector(triTrans.vec3D2, triTrans.vec3D);
-                line2 = line1.subtractVector(triTrans.vec3D3, triTrans.vec3D);
+                line1 = triTrans.vec3D2.subtractVector(triTrans.vec3D);
+                line2 = triTrans.vec3D3.subtractVector(triTrans.vec3D);
 
-                normal = line1.crossProduct(line1, line2);
-                normal = line1.normalizeVector(normal);
+                normal = line1.crossProduct(line2);
+                normal = normal.normalizeVector();
 
-                Vec3D vCameraRay = line1.subtractVector(triTrans.vec3D, vCamera);
+                Vec3D vCameraRay = triTrans.vec3D.subtractVector(vCamera);
 
                 // how much is each triangle's surface normal projection onto the camera
-                if (line1.dotProduct(normal, vCameraRay) < 0.0)
+                if (normal.dotProduct(vCameraRay) < 0.0)
                 {
                     // directional lighting that specifies a direction as to where the light should project from
                     Vec3D light_direction = new Vec3D(0, 0, -1);
-                    light_direction.normalizeVector(light_direction);
+                    light_direction.normalizeVector();
 
-                    double dp = Math.max(0.1, line1.dotProduct(light_direction, normal));
+                    double dp = Math.max(0.1, light_direction.dotProduct(normal));
 
                     // convert world space to view space
                     // TODO: extract method
-                    triViewed.vec3D = matView.multiplyMatrixVector(triTrans.vec3D, matView);
-                    triViewed.vec3D2 = matView.multiplyMatrixVector(triTrans.vec3D2, matView);
-                    triViewed.vec3D3 = matView.multiplyMatrixVector(triTrans.vec3D3, matView);
+                    triViewed.vec3D = matView.multiplyMatrixVector(triTrans.vec3D);
+                    triViewed.vec3D2 = matView.multiplyMatrixVector(triTrans.vec3D2);
+                    triViewed.vec3D3 = matView.multiplyMatrixVector(triTrans.vec3D3);
                     triViewed.vec2D = triTrans.vec2D;
                     triViewed.vec2D2 = triTrans.vec2D2;
                     triViewed.vec2D3 = triTrans.vec2D3;
 
                     // project 3d to 2d screen
-                    triProjection.vec3D = mat.multiplyMatrixVector(triViewed.vec3D, matProj);
-                    triProjection.vec3D2 = mat.multiplyMatrixVector(triViewed.vec3D2, matProj);
-                    triProjection.vec3D3 = mat.multiplyMatrixVector(triViewed.vec3D3, matProj);
+                    triProjection.vec3D = matProj.multiplyMatrixVector(triViewed.vec3D);
+                    triProjection.vec3D2 = matProj.multiplyMatrixVector(triViewed.vec3D2);
+                    triProjection.vec3D3 = matProj.multiplyMatrixVector(triViewed.vec3D3);
 
                     // Clip viewed triangle against near plane
                     int clippedTriangles;
@@ -332,9 +330,9 @@ public class GamePanel extends JPanel implements Runnable
                     for (int n = 0; n < clippedTriangles; n++)
                     {
                         // project 3d geometrical data to normalize 2d screen
-                        triProjection.vec3D = mat.multiplyMatrixVector(clipped[n].vec3D, matProj);
-                        triProjection.vec3D2 = mat.multiplyMatrixVector(clipped[n].vec3D2, matProj);
-                        triProjection.vec3D3 = mat.multiplyMatrixVector(clipped[n].vec3D3, matProj);
+                        triProjection.vec3D = matProj.multiplyMatrixVector(clipped[n].vec3D);
+                        triProjection.vec3D2 = matProj.multiplyMatrixVector(clipped[n].vec3D2);
+                        triProjection.vec3D3 = matProj.multiplyMatrixVector(clipped[n].vec3D3);
                         triProjection.vec2D = (Vec2D) clipped[n].vec2D.clone();
                         triProjection.vec2D2 = (Vec2D) clipped[n].vec2D2.clone();
                         triProjection.vec2D3 = (Vec2D) clipped[n].vec2D3.clone();
@@ -351,9 +349,9 @@ public class GamePanel extends JPanel implements Runnable
                         triProjection.vec2D2.w = 1.0d / triProjection.vec3D2.w;
                         triProjection.vec2D3.w = 1.0d / triProjection.vec3D3.w;
 
-                        triProjection.vec3D = line1.divideVector(triProjection.vec3D, triProjection.vec3D.w);
-                        triProjection.vec3D2 = line1.divideVector(triProjection.vec3D2, triProjection.vec3D2.w);
-                        triProjection.vec3D3 = line1.divideVector(triProjection.vec3D3, triProjection.vec3D3.w);
+                        triProjection.vec3D = triProjection.vec3D.divideVector(triProjection.vec3D.w);
+                        triProjection.vec3D2 = triProjection.vec3D2.divideVector(triProjection.vec3D2.w);
+                        triProjection.vec3D3 = triProjection.vec3D3.divideVector(triProjection.vec3D3.w);
 
                         // scale into view
                         triProjection.vec3D.x += 1.0;

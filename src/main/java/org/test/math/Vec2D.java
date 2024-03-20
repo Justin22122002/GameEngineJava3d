@@ -37,8 +37,8 @@ public class Vec2D
         }
         else
         {
-            this.u /= v;
-            this.v /= v;
+            this.u /= f;
+            this.v /= f;
         }
     }
 

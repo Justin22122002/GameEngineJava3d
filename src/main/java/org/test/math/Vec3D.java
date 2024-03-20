@@ -20,49 +20,49 @@ public class Vec3D
         this.w = 1;
     }
 
-    public Vec3D addVector(Vec3D in, Vec3D in2)
+    public Vec3D addVector(Vec3D in)
     {
-        return new Vec3D(in.x + in2.x, in.y + in2.y, in.z + in2.z);
+        return new Vec3D(in.x + this.x, in.y + this.y, in.z + this.z);
     }
 
-    public Vec3D subtractVector(Vec3D in, Vec3D in2)
+    public Vec3D subtractVector(Vec3D in)
     {
-        return new Vec3D(in.x - in2.x, in.y - in2.y, in.z - in2.z);
+        return new Vec3D(this.x - in.x, this.y - in.y, this.z - in.z);
     }
 
-    public Vec3D multiplyVector(Vec3D in, double f)
+    public Vec3D multiplyVector(double f)
     {
-        return new Vec3D(in.x * f, in.y * f, in.z * f);
+        return new Vec3D(this.x * f, this.y * f, this.z * f);
     }
 
-    public Vec3D divideVector(Vec3D in, double f)
+    public Vec3D divideVector(double f)
     {
-        return new Vec3D(in.x / f, in.y / f, in.z / f);
+        return new Vec3D(this.x / f, this.y / f, this.z / f);
     }
 
-    public double dotProduct(Vec3D in, Vec3D in2)
+    public double dotProduct(Vec3D in)
     {
-        return in.x * in2.x + in.y * in2.y + in.z * in2.z;
+        return this.x * in.x + this.y * in.y + this.z * in.z;
     }
 
-    public double length(Vec3D in)
+    public double length()
     {
-        return Math.sqrt(this.dotProduct(in, in));
+        return Math.sqrt(this.dotProduct(this));
     }
 
-    public Vec3D normalizeVector(Vec3D in)
+    public Vec3D normalizeVector()
     {
-        double f = length(in);
-        return this.divideVector(in, f);
+        double f = this.length();
+        return this.divideVector(f);
     }
 
-    public Vec3D crossProduct(Vec3D in, Vec3D in2)
+    public Vec3D crossProduct(Vec3D in)
     {
         Vec3D out = new Vec3D(0, 0, 0);
 
-        out.x = in.y * in2.z - in.z * in2.y;
-        out.y = in.z * in2.x - in.x * in2.z;
-        out.z = in.x * in2.y - in.y * in2.x;
+        out.x = this.y * in.z - this.z * in.y;
+        out.y = this.z * in.x - this.x * in.z;
+        out.z = this.x * in.y - this.y * in.x;
 
         return out;
     }
@@ -81,27 +81,27 @@ public class Vec3D
         return new Vec3D(cosA * x + sinA * z, y, -sinA * x + cosA * z);
     }
 
-    public double dist(Vec3D p, Vec3D plane_n, Vec3D plane_p)
+    public double dist(Vec3D plane_n, Vec3D plane_p)
     {
-        return (plane_n.x * p.x + plane_n.y * p.y + plane_n.z * p.z - dotProduct(plane_n, plane_p));
+        return (plane_n.x * this.x + plane_n.y * this.y + plane_n.z * this.z - plane_n.dotProduct(plane_p));
     }
 
     public Vec3D vectorIntersectPlane(Vec3D plane_p, Vec3D plane_n, Vec3D lineStart, Vec3D lineEnd, ExtraData tt)
     {
-        plane_n = normalizeVector(plane_n);
-        double plane_d = - dotProduct(plane_n, plane_p);
-        double ad = dotProduct(lineStart, plane_n);
-        double bd = dotProduct(lineEnd, plane_n);
+        plane_n = plane_n.normalizeVector();
+        double plane_d = - plane_n.dotProduct(plane_p);
+        double ad = lineStart.dotProduct(plane_n);
+        double bd = lineEnd.dotProduct(plane_n);
         double t = (-plane_d - ad) / (bd - ad);
         tt.t = t;
-        Vec3D lineStartToEnd = subtractVector(lineEnd, lineStart);
-        Vec3D lineToIntersect = multiplyVector(lineStartToEnd, t);
-        return addVector(lineStart, lineToIntersect);
+        Vec3D lineStartToEnd = lineEnd.subtractVector(lineStart);
+        Vec3D lineToIntersect = lineStartToEnd.multiplyVector(t);
+        return lineStart.addVector(lineToIntersect);
     }
 
     public int triangleClipAgainstPlane(Vec3D plane_p, Vec3D plane_n, Triangle in, Triangle[] out)
     {
-        plane_n = normalizeVector(plane_n);
+        plane_n = plane_n.normalizeVector();
 
         Vec3D[] inside_points = {new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0)};
         int nInsidePointCount = 0;
@@ -116,9 +116,9 @@ public class Vec3D
         int nOutsideTexCount = 0;
 
 
-        double d0 = dist(in.vec3D, plane_n, plane_p);
-        double d1 = dist(in.vec3D2, plane_n, plane_p);
-        double d2 = dist(in.vec3D3, plane_n, plane_p);
+        double d0 = in.vec3D.dist(plane_n, plane_p);
+        double d1 = in.vec3D2.dist(plane_n, plane_p);
+        double d2 = in.vec3D3.dist(plane_n, plane_p);
 
         if (d0 >= 0)
         {

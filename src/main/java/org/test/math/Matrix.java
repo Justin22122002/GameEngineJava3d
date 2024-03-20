@@ -16,37 +16,19 @@ public class Matrix
     {
     }
 
-    public Vec3D multiplyMatrixVector(Vec3D in, Matrix m)
+    public Vec3D multiplyMatrixVector(Vec3D in)
     {
         Vec3D out = new Vec3D();
 
-        out.x = in.x * m.matrix[0][0] + in.y * m.matrix[1][0] + in.z * m.matrix[2][0] + in.w * m.matrix[3][0];
-        out.y = in.x * m.matrix[0][1] + in.y * m.matrix[1][1] + in.z * m.matrix[2][1] + in.w * m.matrix[3][1];
-        out.z = in.x * m.matrix[0][2] + in.y * m.matrix[1][2] + in.z * m.matrix[2][2] + in.w * m.matrix[3][2];
-        out.w = in.x * m.matrix[0][3] + in.y * m.matrix[1][3] + in.z * m.matrix[2][3] + in.w * m.matrix[3][3];
+        out.x = in.x * this.matrix[0][0] + in.y * this.matrix[1][0] + in.z * this.matrix[2][0] + in.w * this.matrix[3][0];
+        out.y = in.x * this.matrix[0][1] + in.y * this.matrix[1][1] + in.z * this.matrix[2][1] + in.w * this.matrix[3][1];
+        out.z = in.x * this.matrix[0][2] + in.y * this.matrix[1][2] + in.z * this.matrix[2][2] + in.w * this.matrix[3][2];
+        out.w = in.x * this.matrix[0][3] + in.y * this.matrix[1][3] + in.z * this.matrix[2][3] + in.w * this.matrix[3][3];
 
         return out;
     }
 
-    /**
-     * public Matrix projektionMatrix(double fNear, double fFar, double a, double fov)
-     * {
-     * Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
-     * <p>
-     * double fFov = 1.0 / Math.tan(fov * 0.5 / Math.PI * 180.0);
-     * <p>
-     * mat.matrix[0][0] = a * fFov;
-     * mat.matrix[1][1] = fFov;
-     * mat.matrix[2][2] = fFar / (fFar - fNear);
-     * mat.matrix[3][2] = 1.0;
-     * mat.matrix[2][3] = (-fFar * fNear) / (fFar - fNear);
-     * mat.matrix[3][3] = 0;
-     * <p>
-     * return mat;
-     * }
-     */
-
-    public Matrix projektionMatrix(double fNear, double fFar, double a, double fov)
+    public static Matrix projektionMatrix(double fNear, double fFar, double a, double fov)
     {
         double fFov = 1.0 / Math.tan(fov * 0.5 / Math.PI * 180.0);
 
@@ -61,23 +43,7 @@ public class Matrix
         return new Matrix(matrix);
     }
 
-
-    /**
-     * public Matrix rotateMatrixX(double angle)
-     * {
-     * Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
-     * <p>
-     * mat.matrix[0][0] = 1.0;
-     * mat.matrix[1][1] = Math.cos(angle);
-     * mat.matrix[1][2] = Math.sin(angle);
-     * mat.matrix[2][1] = -Math.sin(angle);
-     * mat.matrix[2][2] = Math.cos(angle);
-     * mat.matrix[3][3] = 1.0;
-     * <p>
-     * return mat;
-     * }
-     */
-    public Matrix rotateMatrixX(double angle)
+    public static Matrix rotateMatrixX(double angle)
     {
         double[][] matrix = new double[][]
                 {
@@ -90,22 +56,7 @@ public class Matrix
         return new Matrix(matrix);
     }
 
-    /**
-     * public Matrix rotateMatrixY(double angle)
-     * {
-     * Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
-     * <p>
-     * mat.matrix[0][0] = Math.cos(angle);
-     * mat.matrix[0][2] = Math.sin(angle);
-     * mat.matrix[2][0] = -Math.sin(angle);
-     * mat.matrix[1][1] = 1.0;
-     * mat.matrix[2][2] = Math.cos(angle);
-     * mat.matrix[3][3] = 1.0;
-     * <p>
-     * return mat;
-     * }
-     */
-    public Matrix rotateMatrixY(double angle)
+    public static Matrix rotateMatrixY(double angle)
     {
         double[][] matrix = new double[][]
                 {
@@ -118,23 +69,7 @@ public class Matrix
         return new Matrix(matrix);
     }
 
-
-    /**
-     * public Matrix rotateMatrixZ(double angle)
-     * {
-     * Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
-     * <p>
-     * mat.matrix[0][0] = Math.cos(angle);
-     * mat.matrix[0][1] = Math.sin(angle);
-     * mat.matrix[1][0] = -Math.sin(angle);
-     * mat.matrix[1][1] = Math.cos(angle);
-     * mat.matrix[2][2] = 1.0;
-     * mat.matrix[3][3] = 1.0;
-     * <p>
-     * return mat;
-     * }
-     */
-    public Matrix rotateMatrixZ(double angle)
+    public static Matrix rotateMatrixZ(double angle)
     {
         double[][] matrix = new double[][]
                 {
@@ -147,20 +82,7 @@ public class Matrix
         return new Matrix(matrix);
     }
 
-    /**
-     * public Matrix identityMatrix()
-     * {
-     * Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
-     * <p>
-     * mat.matrix[0][0] = 1.0;
-     * mat.matrix[1][1] = 1.0;
-     * mat.matrix[2][2] = 1.0;
-     * mat.matrix[3][3] = 1.0;
-     * <p>
-     * return mat;
-     * }
-     */
-    public Matrix identityMatrix()
+    public static Matrix identityMatrix()
     {
         double[][] matrix = new double[][]
                 {
@@ -173,24 +95,7 @@ public class Matrix
         return new Matrix(matrix);
     }
 
-
-    /**
-     * public Matrix translationMatrix(double x, double y, double z)
-     * {
-     * Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
-     * <p>
-     * mat.matrix[0][0] = 1.0;
-     * mat.matrix[1][1] = 1.0;
-     * mat.matrix[2][2] = 1.0;
-     * mat.matrix[3][3] = 1.0;
-     * mat.matrix[3][0] = x;
-     * mat.matrix[3][1] = y;
-     * mat.matrix[3][2] = z;
-     * <p>
-     * return mat;
-     * }
-     */
-    public Matrix translationMatrix(double x, double y, double z)
+    public static Matrix translationMatrix(double x, double y, double z)
     {
         double[][] matrix = new double[][]
                 {
@@ -203,13 +108,13 @@ public class Matrix
         return new Matrix(matrix);
     }
 
-    public Matrix matrixMatrixMultiplication(Matrix m1, Matrix m2)
+    public Matrix matrixMatrixMultiplication(Matrix m)
     {
         Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
 
-        int m1Rows = m1.matrix.length;
-        int m1Cols = m1.matrix[0].length;
-        int m2Cols = m2.matrix[0].length;
+        int m1Rows = m.matrix.length;
+        int m1Cols = m.matrix[0].length;
+        int m2Cols = this.matrix[0].length;
 
         for (int i = 0; i < m1Rows; i++)
         {
@@ -217,7 +122,7 @@ public class Matrix
             {
                 for (int k = 0; k < m1Cols; k++)
                 {
-                    mat.matrix[i][j] += m1.matrix[i][k] * m2.matrix[k][j];
+                    mat.matrix[i][j] += m.matrix[i][k] * this.matrix[k][j];
                 }
             }
         }
@@ -230,20 +135,20 @@ public class Matrix
         // CALCULATE THE NEW FORWARD DIRECTION
         Vec3D newForward = new Vec3D(0, 0, 0);
 
-        newForward = newForward.subtractVector(target, pos);
-        newForward = newForward.normalizeVector(newForward);
+        newForward = target.subtractVector(pos);
+        newForward = newForward.normalizeVector();
 
         // CALCULATE THE NEW UP DIRECTION
         Vec3D a = new Vec3D(0, 0, 0);
         Vec3D newUp;
 
-        a = a.multiplyVector(newForward, a.dotProduct(up, newForward));
-        newUp = a.subtractVector(up, a);
-        newUp = a.normalizeVector(newUp);
+        a = newForward.multiplyVector(up.dotProduct(newForward));
+        newUp = up.subtractVector(a);
+        newUp = newUp.normalizeVector();
 
         // NEW RIGHT DIRECTION JUST TAKES THE CROSS PRODUCT
         Vec3D newRight;
-        newRight = a.crossProduct(newUp, newForward);
+        newRight = newUp.crossProduct(newForward);
 
         // MANUALLY CONSTRUCT POINT AT MATRIX, THE DIMENSION AND TRANSITION
         double[][] matrix = new double[][]
@@ -258,23 +163,20 @@ public class Matrix
     }
 
 
-    public Matrix inverseMatrix(Matrix m)
+    public Matrix inverseMatrix()
     {
-        // Erstelle eine neue Matrix, um die Inverse zu speichern
-        Matrix mat = new Matrix(new double[][]
+        return new Matrix(new double[][]
                 {
-                        {m.matrix[0][0], m.matrix[1][0], m.matrix[2][0], 0.0},
-                        {m.matrix[0][1], m.matrix[1][1], m.matrix[2][1], 0.0},
-                        {m.matrix[0][2], m.matrix[1][2], m.matrix[2][2], 0.0},
+                        {this.matrix[0][0], this.matrix[1][0], this.matrix[2][0], 0.0},
+                        {this.matrix[0][1], this.matrix[1][1], this.matrix[2][1], 0.0},
+                        {this.matrix[0][2], this.matrix[1][2], this.matrix[2][2], 0.0},
                         {
-                                -(m.matrix[3][0] * m.matrix[0][0] + m.matrix[3][1] * m.matrix[0][1] + m.matrix[3][2] * m.matrix[0][2]),
-                                -(m.matrix[3][0] * m.matrix[1][0] + m.matrix[3][1] * m.matrix[1][1] + m.matrix[3][2] * m.matrix[1][2]),
-                                -(m.matrix[3][0] * m.matrix[2][0] + m.matrix[3][1] * m.matrix[2][1] + m.matrix[3][2] * m.matrix[2][2]),
+                                -(this.matrix[3][0] * this.matrix[0][0] + this.matrix[3][1] * this.matrix[0][1] + this.matrix[3][2] * this.matrix[0][2]),
+                                -(this.matrix[3][0] * this.matrix[1][0] + this.matrix[3][1] * this.matrix[1][1] + this.matrix[3][2] * this.matrix[1][2]),
+                                -(this.matrix[3][0] * this.matrix[2][0] + this.matrix[3][1] * this.matrix[2][1] + this.matrix[3][2] * this.matrix[2][2]),
                                 1.0
                         }
                 });
-
-        return mat;
     }
 
 
