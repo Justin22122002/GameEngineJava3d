@@ -122,7 +122,7 @@ public class Matrix
             {
                 for (int k = 0; k < m1Cols; k++)
                 {
-                    mat.matrix[i][j] += m.matrix[i][k] * this.matrix[k][j];
+                    mat.matrix[i][j] += this.matrix[i][k] * m.matrix[k][j];
                 }
             }
         }
