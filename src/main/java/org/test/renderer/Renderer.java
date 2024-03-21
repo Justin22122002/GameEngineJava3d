@@ -31,7 +31,7 @@ public class Renderer
      * @param vecTrianglesToRaster The list of triangles to render.
      * @param jPanel               The panel on which to render the triangles.
      */
-    public void render(Graphics2D g2, List<Triangle> vecTrianglesToRaster, JPanel jPanel)
+    public void render(List<Triangle> vecTrianglesToRaster)
     {
         clearScreen();
         resetZBuffer();
@@ -70,7 +70,6 @@ public class Renderer
         }
 
         updateImage();
-        drawImage(g2, jPanel);
     }
 
     /**
@@ -141,16 +140,5 @@ public class Renderer
     private void updateImage()
     {
         settings.getmImageProducer().newPixels();
-    }
-
-    /**
-     * Draws the rendered image onto the panel.
-     *
-     * @param g2    The graphics context.
-     * @param panel The panel to draw the image on.
-     */
-    private void drawImage(Graphics2D g2, JPanel panel)
-    {
-        g2.drawImage(settings.getImageBuffer(), 0, 0, (int) getImageWidth(), (int) getImageHeight(), panel);
     }
 }

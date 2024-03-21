@@ -5,17 +5,15 @@ import org.test.renderdata.RenderSettings;
 import javax.swing.*;
 import java.awt.*;
 
+import static org.test.renderer.ImageConfig.getImageHeight;
+import static org.test.renderer.ImageConfig.getImageWidth;
+
 public class RenderPanel extends JPanel
 {
     private final RenderSettings settings = RenderSettings.getInstance();
-    private final Rasterizer rasterizer;
-    private final Renderer renderer;
 
-    public RenderPanel(Rasterizer rasterizer, Renderer renderer)
+    public RenderPanel()
     {
-        this.rasterizer = rasterizer;
-        this.renderer = renderer;
-
         // Basic JPanel Configuration
         this.addKeyListener(settings.getKeyH());
         this.addMouseMotionListener(settings.getKeyH());
@@ -28,7 +26,7 @@ public class RenderPanel extends JPanel
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        renderer.render(g2, rasterizer.raster(), this);
+        g2.drawImage(settings.getImageBuffer(), 0, 0, (int) getImageWidth(), (int) getImageHeight(), this);
 
         g.dispose();
     }

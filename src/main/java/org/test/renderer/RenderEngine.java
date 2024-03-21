@@ -1,18 +1,18 @@
 package org.test.renderer;
 
+import org.test.math.triangle.Triangle;
 import org.test.renderdata.RenderSettings;
 import org.test.scene.AbstractScene;
 
 import javax.swing.*;
+
+import java.util.List;
 
 import static org.test.renderer.ImageConfig.getImageHeight;
 import static org.test.renderer.ImageConfig.getImageWidth;
 
 public class RenderEngine implements Runnable
 {
-    private static final double WIDTH = 1440.0;
-    private static final double HEIGHT = 1080.0;
-
     private final RenderSettings settings = RenderSettings.getInstance();
     private AbstractScene scene;
     private final Rasterizer rasterizer;
@@ -28,7 +28,7 @@ public class RenderEngine implements Runnable
         rasterizer = new Rasterizer(new RasterAssembler());
         renderer = new Renderer();
 
-        renderPanel = new RenderPanel(rasterizer, renderer);
+        renderPanel = new RenderPanel();
         initializeMesh();
 
         JFrame jFrame = new JFrame();
@@ -88,6 +88,18 @@ public class RenderEngine implements Runnable
 
     public void update()
     {
+        List<Triangle> trisToRender = rasterizer.raster();
+        renderer.render(trisToRender);
         scene.update();
+    }
+
+    public AbstractScene getScene()
+    {
+        return scene;
+    }
+
+    public void setScene(AbstractScene scene)
+    {
+        this.scene = scene;
     }
 }
