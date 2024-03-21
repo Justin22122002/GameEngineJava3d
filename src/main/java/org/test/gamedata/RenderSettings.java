@@ -1,10 +1,10 @@
 package org.test.gamedata;
 
-import org.test.KeyHandler;
-import org.test.gfx.ZBuffer;
-import org.test.math.Matrix;
-import org.test.math.PolygonGroup;
-import org.test.math.Vec3D;
+import org.test.input.KeyHandler;
+import org.test.graphics.ZBuffer;
+import org.test.math.matrix.Matrix4x4;
+import org.test.math.triangle.PolygonGroup;
+import org.test.math.vector.Vector3D;
 import org.test.renderer.Camera;
 
 import java.awt.*;
@@ -38,17 +38,17 @@ public class RenderSettings
     private double fTheta; // angle used in rotation matrix
 
     // Projection matrix
-    private Matrix matProj; // projection matrix
-    private Matrix matZ, matZX; // rotation matrix
+    private Matrix4x4 matProj; // projection matrix
+    private Matrix4x4 matZ, matZX; // rotation matrix
     private PolygonGroup polygonGroup; // stores all Objects
     private Camera vCamera; // stationary position vector, that will serve as the camera
-    private Vec3D vLookDir; // camera that follows along the look at direction
+    private Vector3D vLookDir; // camera that follows along the look at direction
 
     public RenderSettings()
     {
         vCamera = new Camera(0, 0, 0);
-        vLookDir = new Vec3D(0, 0, 1);
-        matProj = Matrix.projektionMatrix(fNear, fFar, a, fov);
+        vLookDir = new Vector3D(0, 0, 1);
+        matProj = Matrix4x4.projektionMatrix(fNear, fFar, a, fov);
         zBuffer = new ZBuffer((int) getImageWidth(), (int) getImageHeight());
         keyH = new KeyHandler();
 
@@ -227,32 +227,32 @@ public class RenderSettings
         this.fTheta = fTheta;
     }
 
-    public Matrix getMatProj()
+    public Matrix4x4 getMatProj()
     {
         return matProj;
     }
 
-    public void setMatProj(Matrix matProj)
+    public void setMatProj(Matrix4x4 matProj)
     {
         this.matProj = matProj;
     }
 
-    public Matrix getMatZ()
+    public Matrix4x4 getMatZ()
     {
         return matZ;
     }
 
-    public void setMatZ(Matrix matZ)
+    public void setMatZ(Matrix4x4 matZ)
     {
         this.matZ = matZ;
     }
 
-    public Matrix getMatZX()
+    public Matrix4x4 getMatZX()
     {
         return matZX;
     }
 
-    public void setMatZX(Matrix matZX)
+    public void setMatZX(Matrix4x4 matZX)
     {
         this.matZX = matZX;
     }
@@ -277,12 +277,12 @@ public class RenderSettings
         this.vCamera = vCamera;
     }
 
-    public Vec3D getvLookDir()
+    public Vector3D getvLookDir()
     {
         return vLookDir;
     }
 
-    public void setvLookDir(Vec3D vLookDir)
+    public void setvLookDir(Vector3D vLookDir)
     {
         this.vLookDir = vLookDir;
     }

@@ -1,4 +1,4 @@
-package org.test.gfx;
+package org.test.graphics;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

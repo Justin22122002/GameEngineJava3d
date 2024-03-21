@@ -1,4 +1,4 @@
-package org.test.gfx;
+package org.test.graphics;
 
 /**
  * The ZBuffer class represents a depth buffer used in computer graphics to

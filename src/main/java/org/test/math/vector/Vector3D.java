@@ -1,13 +1,11 @@
-package org.test.math;
+package org.test.math.vector;
 
 import java.util.Objects;
-
-import static org.test.math.GeometryUtils.vectorIntersectPlane;
 
 /**
  * Represents a three-dimensional vector in space.
  */
-public class Vec3D implements Cloneable
+public class Vector3D implements Cloneable
 {
     public double x, y, z, w;
 
@@ -18,7 +16,7 @@ public class Vec3D implements Cloneable
      * @param y The y-coordinate of the vector.
      * @param z The z-coordinate of the vector.
      */
-    public Vec3D(double x, double y, double z)
+    public Vector3D(double x, double y, double z)
     {
         this.x = x;
         this.y = y;
@@ -29,7 +27,7 @@ public class Vec3D implements Cloneable
     /**
      * Constructs a new Vector3D with default coordinates (0, 0, 0).
      */
-    public Vec3D()
+    public Vector3D()
     {
         this.x = 0;
         this.y = 0;
@@ -41,7 +39,7 @@ public class Vec3D implements Cloneable
      * Sets the parameter of the input vector
      * @param in Input vector
      */
-    public void setVector(Vec3D in)
+    public void setVector(Vector3D in)
     {
         this.x = in.x;
         this.y = in.y;
@@ -55,9 +53,9 @@ public class Vec3D implements Cloneable
      * @param in The vector to add.
      * @return The result of adding the vectors.
      */
-    public Vec3D addVector(Vec3D in)
+    public Vector3D addVector(Vector3D in)
     {
-        return new Vec3D(in.x + this.x, in.y + this.y, in.z + this.z);
+        return new Vector3D(in.x + this.x, in.y + this.y, in.z + this.z);
     }
 
     /**
@@ -66,9 +64,9 @@ public class Vec3D implements Cloneable
      * @param in The vector to subtract.
      * @return The result of subtracting the vectors.
      */
-    public Vec3D subtractVector(Vec3D in)
+    public Vector3D subtractVector(Vector3D in)
     {
-        return new Vec3D(this.x - in.x, this.y - in.y, this.z - in.z);
+        return new Vector3D(this.x - in.x, this.y - in.y, this.z - in.z);
     }
 
     /**
@@ -77,9 +75,9 @@ public class Vec3D implements Cloneable
      * @param f The scalar value to multiply by.
      * @return The result of the multiplication.
      */
-    public Vec3D multiplyVector(double f)
+    public Vector3D multiplyVector(double f)
     {
-        return new Vec3D(this.x * f, this.y * f, this.z * f);
+        return new Vector3D(this.x * f, this.y * f, this.z * f);
     }
 
     /**
@@ -89,9 +87,9 @@ public class Vec3D implements Cloneable
      * @return The result of the division.
      * @throws IllegalArgumentException if dividing by zero.
      */
-    public Vec3D divideVector(double f)
+    public Vector3D divideVector(double f)
     {
-        return new Vec3D(this.x / f, this.y / f, this.z / f);
+        return new Vector3D(this.x / f, this.y / f, this.z / f);
     }
 
     /**
@@ -100,7 +98,7 @@ public class Vec3D implements Cloneable
      * @param in The other vector.
      * @return The dot product of the two vectors.
      */
-    public double dotProduct(Vec3D in)
+    public double dotProduct(Vector3D in)
     {
         return this.x * in.x + this.y * in.y + this.z * in.z;
     }
@@ -120,7 +118,7 @@ public class Vec3D implements Cloneable
      *
      * @return The normalized vector.
      */
-    public Vec3D normalizeVector()
+    public Vector3D normalizeVector()
     {
         double f = this.length();
         return this.divideVector(f);
@@ -132,9 +130,9 @@ public class Vec3D implements Cloneable
      * @param in The other vector.
      * @return The cross product of the two vectors.
      */
-    public Vec3D crossProduct(Vec3D in)
+    public Vector3D crossProduct(Vector3D in)
     {
-        Vec3D out = new Vec3D(0, 0, 0);
+        Vector3D out = new Vector3D(0, 0, 0);
 
         out.x = this.y * in.z - this.z * in.y;
         out.y = this.z * in.x - this.x * in.z;
@@ -149,11 +147,11 @@ public class Vec3D implements Cloneable
      * @param angle The angle of rotation (in radians).
      * @return The rotated vector.
      */
-    public Vec3D rotateX(double angle)
+    public Vector3D rotateX(double angle)
     {
         double cosA = Math.cos(angle);
         double sinA = Math.sin(angle);
-        return new Vec3D(x, cosA * y - sinA * z, sinA * y + cosA * z);
+        return new Vector3D(x, cosA * y - sinA * z, sinA * y + cosA * z);
     }
 
     /**
@@ -162,11 +160,11 @@ public class Vec3D implements Cloneable
      * @param angle The angle of rotation (in radians).
      * @return The rotated vector.
      */
-    public Vec3D rotateY(double angle)
+    public Vector3D rotateY(double angle)
     {
         double cosA = Math.cos(angle);
         double sinA = Math.sin(angle);
-        return new Vec3D(cosA * x + sinA * z, y, -sinA * x + cosA * z);
+        return new Vector3D(cosA * x + sinA * z, y, -sinA * x + cosA * z);
     }
 
     /**
@@ -176,7 +174,7 @@ public class Vec3D implements Cloneable
      * @param plane_p A point on the plane.
      * @return The distance from this vector to the plane.
      */
-    public double dist(Vec3D plane_n, Vec3D plane_p)
+    public double dist(Vector3D plane_n, Vector3D plane_p)
     {
         return (plane_n.x * this.x + plane_n.y * this.y + plane_n.z * this.z - plane_n.dotProduct(plane_p));
     }
@@ -197,11 +195,11 @@ public class Vec3D implements Cloneable
     }
 
     @Override
-    public Vec3D clone()
+    public Vector3D clone()
     {
         try
         {
-            Vec3D clone = (Vec3D) super.clone();
+            Vector3D clone = (Vector3D) super.clone();
             return clone;
         }
         catch (CloneNotSupportedException e)
@@ -215,7 +213,7 @@ public class Vec3D implements Cloneable
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Vec3D vector3D = (Vec3D) o;
+        Vector3D vector3D = (Vector3D) o;
         return Double.compare(x, vector3D.x) == 0
                 && Double.compare(y, vector3D.y) == 0
                 && Double.compare(z, vector3D.z) == 0

@@ -1,11 +1,13 @@
-package org.test.math;
+package org.test.math.matrix;
+
+import org.test.math.vector.Vector3D;
 
 import java.util.Arrays;
 
 /**
  * Represents a 4x4 matrix.
  */
-public class Matrix implements Cloneable
+public class Matrix4x4 implements Cloneable
 {
     // should be a 4 * 4 Matrix
     double[][] matrix;
@@ -15,7 +17,7 @@ public class Matrix implements Cloneable
      *
      * @param matrix The 4x4 matrix data.
      */
-    public Matrix(double[][] matrix)
+    public Matrix4x4(double[][] matrix)
     {
         this.matrix = matrix;
     }
@@ -23,7 +25,7 @@ public class Matrix implements Cloneable
     /**
      * Constructs a new empty Matrix4x4.
      */
-    public Matrix()
+    public Matrix4x4()
     {
     }
 
@@ -33,9 +35,9 @@ public class Matrix implements Cloneable
      * @param in The input vector.
      * @return The resulting vector after multiplication.
      */
-    public Vec3D multiplyMatrixVector(Vec3D in)
+    public Vector3D multiplyMatrixVector(Vector3D in)
     {
-        Vec3D out = new Vec3D();
+        Vector3D out = new Vector3D();
 
         out.x = in.x * this.matrix[0][0] + in.y * this.matrix[1][0] + in.z * this.matrix[2][0] + in.w * this.matrix[3][0];
         out.y = in.x * this.matrix[0][1] + in.y * this.matrix[1][1] + in.z * this.matrix[2][1] + in.w * this.matrix[3][1];
@@ -54,7 +56,7 @@ public class Matrix implements Cloneable
      * @param fov   The field of view angle in degrees.
      * @return This Matrix4x4 instance with the projection matrix.
      */
-    public static Matrix projektionMatrix(double fNear, double fFar, double a, double fov)
+    public static Matrix4x4 projektionMatrix(double fNear, double fFar, double a, double fov)
     {
         double fFov = 1.0 / Math.tan(fov * 0.5 / Math.PI * 180.0);
 
@@ -66,7 +68,7 @@ public class Matrix implements Cloneable
                         {0, 0, 1.0, 0}
                 };
 
-        return new Matrix(matrix);
+        return new Matrix4x4(matrix);
     }
 
     /**
@@ -75,7 +77,7 @@ public class Matrix implements Cloneable
      * @param angle The rotation angle in radians around the X-axis.
      * @return This Matrix4x4 instance with the rotation matrix.
      */
-    public static Matrix rotateMatrixX(double angle)
+    public static Matrix4x4 rotateMatrixX(double angle)
     {
         double[][] matrix = new double[][]
                 {
@@ -85,7 +87,7 @@ public class Matrix implements Cloneable
                         {0, 0, 0, 1.0}
                 };
 
-        return new Matrix(matrix);
+        return new Matrix4x4(matrix);
     }
 
     /**
@@ -94,7 +96,7 @@ public class Matrix implements Cloneable
      * @param angle The rotation angle in radians around the Y-axis.
      * @return This Matrix4x4 instance with the rotation matrix.
      */
-    public static Matrix rotateMatrixY(double angle)
+    public static Matrix4x4 rotateMatrixY(double angle)
     {
         double[][] matrix = new double[][]
                 {
@@ -104,7 +106,7 @@ public class Matrix implements Cloneable
                         {0, 0, 0, 1.0}
                 };
 
-        return new Matrix(matrix);
+        return new Matrix4x4(matrix);
     }
 
     /**
@@ -113,7 +115,7 @@ public class Matrix implements Cloneable
      * @param angle The rotation angle in radians around the Z-axis.
      * @return This Matrix4x4 instance with the rotation matrix.
      */
-    public static Matrix rotateMatrixZ(double angle)
+    public static Matrix4x4 rotateMatrixZ(double angle)
     {
         double[][] matrix = new double[][]
                 {
@@ -123,7 +125,7 @@ public class Matrix implements Cloneable
                         {0, 0, 0, 1.0}
                 };
 
-        return new Matrix(matrix);
+        return new Matrix4x4(matrix);
     }
 
     /**
@@ -131,7 +133,7 @@ public class Matrix implements Cloneable
      *
      * @return This Matrix4x4 instance with the identity matrix.
      */
-    public static Matrix identityMatrix()
+    public static Matrix4x4 identityMatrix()
     {
         double[][] matrix = new double[][]
                 {
@@ -141,7 +143,7 @@ public class Matrix implements Cloneable
                         {0, 0, 0, 1.0}
                 };
 
-        return new Matrix(matrix);
+        return new Matrix4x4(matrix);
     }
 
     /**
@@ -152,7 +154,7 @@ public class Matrix implements Cloneable
      * @param z The translation in the z direction.
      * @return This Matrix4x4 instance with the translation matrix.
      */
-    public static Matrix translationMatrix(double x, double y, double z)
+    public static Matrix4x4 translationMatrix(double x, double y, double z)
     {
         double[][] matrix = new double[][]
                 {
@@ -162,7 +164,7 @@ public class Matrix implements Cloneable
                         {x, y, z, 1.0}
                 };
 
-        return new Matrix(matrix);
+        return new Matrix4x4(matrix);
     }
 
     /**
@@ -171,9 +173,9 @@ public class Matrix implements Cloneable
      * @param m The matrix to be multiplied with this matrix.
      * @return The resulting matrix of the multiplication.
      */
-    public Matrix multiply(Matrix m)
+    public Matrix4x4 multiplyMatrix(Matrix4x4 m)
     {
-        Matrix mat = new Matrix(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
+        Matrix4x4 mat = new Matrix4x4(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
 
         int m1Rows = m.matrix.length;
         int m1Cols = m.matrix[0].length;
@@ -202,24 +204,24 @@ public class Matrix implements Cloneable
      * @param up     The up vector specifying the orientation of the object.
      * @return The transformation matrix.
      */
-    public Matrix pointAtMatrix(Vec3D pos, Vec3D target, Vec3D up)
+    public Matrix4x4 pointAtMatrix(Vector3D pos, Vector3D target, Vector3D up)
     {
         // CALCULATE THE NEW FORWARD DIRECTION
-        Vec3D newForward = new Vec3D(0, 0, 0);
+        Vector3D newForward = new Vector3D(0, 0, 0);
 
         newForward = target.subtractVector(pos);
         newForward = newForward.normalizeVector();
 
         // CALCULATE THE NEW UP DIRECTION
-        Vec3D a = new Vec3D(0, 0, 0);
-        Vec3D newUp;
+        Vector3D a = new Vector3D(0, 0, 0);
+        Vector3D newUp;
 
         a = newForward.multiplyVector(up.dotProduct(newForward));
         newUp = up.subtractVector(a);
         newUp = newUp.normalizeVector();
 
         // NEW RIGHT DIRECTION JUST TAKES THE CROSS PRODUCT
-        Vec3D newRight;
+        Vector3D newRight;
         newRight = newUp.crossProduct(newForward);
 
         // MANUALLY CONSTRUCT POINT AT MATRIX, THE DIMENSION AND TRANSITION
@@ -231,7 +233,7 @@ public class Matrix implements Cloneable
                         {pos.x, pos.y, pos.z, 1.0}
                 };
 
-        return new Matrix(matrix);
+        return new Matrix4x4(matrix);
     }
 
     /**
@@ -240,9 +242,9 @@ public class Matrix implements Cloneable
      * @return The inverse of this matrix.
      * @throws ArithmeticException if the matrix is singular and does not have an inverse.
      */
-    public Matrix inverseMatrix()
+    public Matrix4x4 inverseMatrix()
     {
-        return new Matrix(new double[][]
+        return new Matrix4x4(new double[][]
                 {
                         {this.matrix[0][0], this.matrix[1][0], this.matrix[2][0], 0.0},
                         {this.matrix[0][1], this.matrix[1][1], this.matrix[2][1], 0.0},
@@ -273,11 +275,11 @@ public class Matrix implements Cloneable
 
 
     @Override
-    public Matrix clone()
+    public Matrix4x4 clone()
     {
         try
         {
-            Matrix clone = (Matrix) super.clone();
+            Matrix4x4 clone = (Matrix4x4) super.clone();
             return clone;
         }
         catch (CloneNotSupportedException e)
@@ -291,7 +293,7 @@ public class Matrix implements Cloneable
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Matrix matrix4x4 = (Matrix) o;
+        Matrix4x4 matrix4x4 = (Matrix4x4) o;
         return Arrays.deepEquals(matrix, matrix4x4.matrix);
     }
 

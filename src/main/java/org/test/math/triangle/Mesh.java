@@ -1,4 +1,7 @@
-package org.test.math;
+package org.test.math.triangle;
+
+import org.test.math.vector.Vector2D;
+import org.test.math.vector.Vector3D;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -73,35 +76,35 @@ public class Mesh
                     String[] spl3 = split[3].split(Pattern.quote("/"));
                     Triangle tri = new Triangle
                             (
-                                    new Vec3D
+                                    new Vector3D
                                             (
                                                     vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
                                                     vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl1[0]) - 1)[2]
                                             ),
-                                    new Vec3D
+                                    new Vector3D
                                             (
                                                     vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
                                                     vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl2[0]) - 1)[2]
                                             ),
-                                    new Vec3D
+                                    new Vector3D
                                             (
                                                     vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
                                                     vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl3[0]) - 1)[2]
                                             ),
-                                    new Vec2D
+                                    new Vector2D
                                             (
                                                     texs.get(Integer.parseInt(spl1[1]) - 1)[0],
                                                     texs.get(Integer.parseInt(spl1[1]) - 1)[1]
                                             ),
-                                    new Vec2D
+                                    new Vector2D
                                             (
                                                     texs.get(Integer.parseInt(spl2[1]) - 1)[0],
                                                     texs.get(Integer.parseInt(spl2[1]) - 1)[1]
                                             ),
-                                    new Vec2D
+                                    new Vector2D
                                             (
                                                     texs.get(Integer.parseInt(spl3[1]) - 1)[0],
                                                     texs.get(Integer.parseInt(spl3[1]) - 1)[1]
@@ -116,19 +119,19 @@ public class Mesh
                     String[] spl3 = split[3].split(Pattern.quote("/"));
                     Triangle tri = new Triangle
                             (
-                                    new Vec3D
+                                    new Vector3D
                                             (
                                                     -vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
                                                     -vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl1[0]) - 1)[2]
                                             ),
-                                    new Vec3D
+                                    new Vector3D
                                             (
                                                     -vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
                                                     -vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl2[0]) - 1)[2]
                                             ),
-                                    new Vec3D
+                                    new Vector3D
                                             (
                                                     -vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
                                                     -vertices.get(Integer.parseInt(spl3[0]) - 1)[1],

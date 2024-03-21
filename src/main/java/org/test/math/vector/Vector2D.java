@@ -1,11 +1,11 @@
-package org.test.math;
+package org.test.math.vector;
 
 import java.util.Objects;
 
 /**
  * A simple 2D vector class representing vectors in a two-dimensional space.
  */
-public class Vec2D implements Cloneable
+public class Vector2D implements Cloneable
 {
     public double u, v, w;
 
@@ -15,7 +15,7 @@ public class Vec2D implements Cloneable
      * @param u The x-component of the vector.
      * @param v The y-component of the vector.
      */
-    public Vec2D(double u, double v)
+    public Vector2D(double u, double v)
     {
         this.u = u;
         this.v = v;
@@ -25,7 +25,7 @@ public class Vec2D implements Cloneable
     /**
      * Constructs a Vector2D representing the origin (0,0).
      */
-    public Vec2D()
+    public Vector2D()
     {
         this.u = 0;
         this.v = 0;
@@ -68,11 +68,11 @@ public class Vec2D implements Cloneable
     }
 
     @Override
-    public Vec2D clone()
+    public Vector2D clone()
     {
         try
         {
-            Vec2D clone = (Vec2D) super.clone();
+            Vector2D clone = (Vector2D) super.clone();
             return clone;
         }
         catch (CloneNotSupportedException e)
@@ -86,7 +86,7 @@ public class Vec2D implements Cloneable
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Vec2D vector2D = (Vec2D) o;
+        Vector2D vector2D = (Vector2D) o;
         return Double.compare(u, vector2D.u) == 0
                 && Double.compare(v, vector2D.v) == 0
                 && Double.compare(w, vector2D.w) == 0;

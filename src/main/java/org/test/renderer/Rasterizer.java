@@ -1,12 +1,15 @@
 package org.test.renderer;
 
 import org.test.gamedata.RenderSettings;
-import org.test.math.*;
+import org.test.math.matrix.Matrix4x4;
+import org.test.math.triangle.Mesh;
+import org.test.math.triangle.Triangle;
+import org.test.math.vector.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.test.math.Triangle.getNearestPlane;
+import static org.test.math.triangle.Triangle.getNearestPlane;
 
 /**
  * The Rasterizer class is responsible for converting geometric primitives into a rasterized image during rendering.
@@ -31,40 +34,40 @@ public class Rasterizer
         List<Triangle> vecTrianglesToRaster = new ArrayList<>();
 
         // rotation matrix
-        settings.setMatZ(Matrix.rotateMatrixZ(settings.getfTheta() * 0.5));
-        settings.setMatZX(Matrix.rotateMatrixX(settings.getfTheta()));
+        settings.setMatZ(Matrix4x4.rotateMatrixZ(settings.getfTheta() * 0.5));
+        settings.setMatZX(Matrix4x4.rotateMatrixX(settings.getfTheta()));
 
         // distance from cube -> translation matrix
-        Matrix trans = Matrix.translationMatrix(0, 0, 1);
+        Matrix4x4 trans = Matrix4x4.translationMatrix(0, 0, 1);
 
         // Matrix Matrix multiplication to accumulate multiple transformations
-        Matrix matWorld = settings.getMatZ().multiply(settings.getMatZX());
-        matWorld = matWorld.multiply(trans);
+        Matrix4x4 matWorld = settings.getMatZ().multiplyMatrix(settings.getMatZX());
+        matWorld = matWorld.multiplyMatrix(trans);
 
-        Matrix matView = rasterAssembler.calculateViewMatrix(settings.getfPitch(), settings.getfYaw(), settings.getvCamera(), settings.getvLookDir());
+        Matrix4x4 matView = rasterAssembler.calculateViewMatrix(settings.getfPitch(), settings.getfYaw(), settings.getvCamera(), settings.getvLookDir());
 
         for(Mesh mesh: settings.getPolygonGroup().getPolyGroup())
         {
             for (Triangle tri : mesh.triangles)
             {
-                Triangle triProjection = new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0));
-                Triangle triTrans = new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0));
-                Triangle triViewed = new Triangle(new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0));
+                Triangle triProjection = new Triangle(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
+                Triangle triTrans = new Triangle(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
+                Triangle triViewed = new Triangle(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
 
                 // assemble World Matrix
                 rasterAssembler.assembleWorldMatrix(triTrans, tri, matWorld);
 
-                Vec3D line1 = new Vec3D();
-                Vec3D line2 = new Vec3D();
-                Vec3D normal = rasterAssembler.assembleVertexNormals(triTrans, line1, line2);
+                Vector3D line1 = new Vector3D();
+                Vector3D line2 = new Vector3D();
+                Vector3D normal = rasterAssembler.assembleVertexNormals(triTrans, line1, line2);
 
-                Vec3D vCameraRay = triTrans.vec3D.subtractVector(settings.getvCamera().getCam());
+                Vector3D vCameraRay = triTrans.vec3D.subtractVector(settings.getvCamera().getCam());
 
                 // how much is each triangle's surface normal projection onto the camera
                 if (normal.dotProduct(vCameraRay) < 0.0)
                 {
                     // directional lighting that specifies a direction as to where the light should project from
-                    Vec3D light_direction = new Vec3D(0, 0, -1);
+                    Vector3D light_direction = new Vector3D(0, 0, -1);
                     light_direction.normalizeVector();
 
                     double dp = Math.max(0.1, light_direction.dotProduct(normal));
@@ -79,7 +82,7 @@ public class Rasterizer
                     int clippedTriangles;
                     Triangle[] clipped = getNearestPlane();
 
-                    clippedTriangles = triViewed.triangleClipAgainstPlane(new Vec3D(0, 0, 0.1d), new Vec3D(0, 0, 1), clipped);
+                    clippedTriangles = triViewed.triangleClipAgainstPlane(new Vector3D(0, 0, 0.1d), new Vector3D(0, 0, 1), clipped);
 
                     for (int n = 0; n < clippedTriangles; n++)
                     {

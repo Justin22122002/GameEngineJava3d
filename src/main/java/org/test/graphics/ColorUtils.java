@@ -1,4 +1,4 @@
-package org.test.gfx;
+package org.test.graphics;
 
 /**
  * Utility class for manipulating color values in Java.

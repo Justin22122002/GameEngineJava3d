@@ -1,6 +1,8 @@
 package org.test.renderer;
 
-import org.test.math.*;
+import org.test.math.matrix.Matrix4x4;
+import org.test.math.triangle.Triangle;
+import org.test.math.vector.Vector3D;
 
 import static org.test.Main.getImageHeight;
 import static org.test.Main.getImageWidth;
@@ -17,12 +19,12 @@ public class RasterAssembler
      * @param tri       The original triangle.
      * @param matWorld  The world matrix.
      */
-    public void assembleWorldMatrix(Triangle triTrans, Triangle tri, Matrix matWorld)
+    public void assembleWorldMatrix(Triangle triTrans, Triangle tri, Matrix4x4 matWorld)
     {
         test(triTrans, tri, matWorld);
     }
 
-    private void test(Triangle triTrans, Triangle tri, Matrix matWorld)
+    private void test(Triangle triTrans, Triangle tri, Matrix4x4 matWorld)
     {
         triTrans.vec3D = matWorld.multiplyMatrixVector(tri.vec3D);
         triTrans.vec3D2 = matWorld.multiplyMatrixVector(tri.vec3D2);
@@ -40,12 +42,12 @@ public class RasterAssembler
      * @param line2    The second line vector.
      * @return The calculated normal vector.
      */
-    public Vec3D assembleVertexNormals(Triangle triTrans, Vec3D line1, Vec3D line2)
+    public Vector3D assembleVertexNormals(Triangle triTrans, Vector3D line1, Vector3D line2)
     {
         line1.setVector(triTrans.vec3D2.subtractVector(triTrans.vec3D));
         line2.setVector(triTrans.vec3D3.subtractVector(triTrans.vec3D));
 
-        Vec3D normal = line1.crossProduct(line2);
+        Vector3D normal = line1.crossProduct(line2);
         normal = normal.normalizeVector();
 
         return normal;
@@ -58,7 +60,7 @@ public class RasterAssembler
      * @param triTrans  The transformed triangle.
      * @param matView   The view matrix.
      */
-    public void assembleViewMatrix(Triangle triViewed, Triangle triTrans, Matrix matView)
+    public void assembleViewMatrix(Triangle triViewed, Triangle triTrans, Matrix4x4 matView)
     {
         test(triViewed, triTrans, matView);
     }
@@ -72,17 +74,17 @@ public class RasterAssembler
      * @param vLookDir  The look direction vector.
      * @return The calculated view matrix.
      */
-    public Matrix calculateViewMatrix(double fPitch, double fYaw, Camera camera, Vec3D vLookDir)
+    public Matrix4x4 calculateViewMatrix(double fPitch, double fYaw, Camera camera, Vector3D vLookDir)
     {
-        Vec3D vUp = new Vec3D(0, 1, 0);
-        Vec3D vTarget = new Vec3D(0, 0, 1);
-        Matrix matCameraRot = Matrix.rotateMatrixX(fPitch).multiply(Matrix.rotateMatrixY(fYaw));
+        Vector3D vUp = new Vector3D(0, 1, 0);
+        Vector3D vTarget = new Vector3D(0, 0, 1);
+        Matrix4x4 matCameraRot = Matrix4x4.rotateMatrixX(fPitch).multiplyMatrix(Matrix4x4.rotateMatrixY(fYaw));
         vLookDir.setVector(matCameraRot.multiplyMatrixVector(vTarget));
 
         vTarget = camera.getCam().addVector(vLookDir);
 
         // using the information provided above to define a camera matrix
-        Matrix matCamera = new Matrix().pointAtMatrix(camera.getCam(), vTarget, vUp);
+        Matrix4x4 matCamera = new Matrix4x4().pointAtMatrix(camera.getCam(), vTarget, vUp);
 
         // matView
         return matCamera.inverseMatrix();
@@ -95,7 +97,7 @@ public class RasterAssembler
      * @param triViewed     The viewed triangle.
      * @param matProj       The projection matrix.
      */
-    public void assembleProjectionMatrix(Triangle triProjection, Triangle triViewed, Matrix matProj)
+    public void assembleProjectionMatrix(Triangle triProjection, Triangle triViewed, Matrix4x4 matProj)
     {
         // project 3d to 2d screen
         triProjection.vec3D = matProj.multiplyMatrixVector(triViewed.vec3D);
@@ -111,7 +113,7 @@ public class RasterAssembler
      * @param n             The index of the clipped triangle.
      * @param matProj       The projection matrix.
      */
-    public void assembleClipSpace(Triangle triProjection, Triangle[] clipped, int n, Matrix matProj)
+    public void assembleClipSpace(Triangle triProjection, Triangle[] clipped, int n, Matrix4x4 matProj)
     {
         // project 3d geometrical data to normalize 2d screen
         triProjection.vec3D = matProj.multiplyMatrixVector(clipped[n].vec3D);

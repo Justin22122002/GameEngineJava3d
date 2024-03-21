@@ -1,8 +1,8 @@
 package org.test.renderer;
 
 import org.test.gamedata.RenderSettings;
-import org.test.math.Triangle;
-import org.test.math.Vec3D;
+import org.test.math.triangle.Triangle;
+import org.test.math.vector.Vector3D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +12,10 @@ import java.util.List;
 
 import static org.test.Main.getImageHeight;
 import static org.test.Main.getImageWidth;
-import static org.test.gfx.ColorUtils.CD_BLACK;
-import static org.test.gfx.DrawUtils.TexturedTriangle;
-import static org.test.gfx.DrawUtils.slFill;
-import static org.test.math.Triangle.getNearestPlane;
+import static org.test.graphics.ColorUtils.CD_BLACK;
+import static org.test.graphics.DrawUtils.TexturedTriangle;
+import static org.test.graphics.DrawUtils.slFill;
+import static org.test.math.triangle.Triangle.getNearestPlane;
 
 /**
  * The Renderer class is responsible for rendering triangles onto a graphics context.
@@ -89,19 +89,19 @@ public class Renderer
         {
             case 0 ->
             {
-                return test.triangleClipAgainstPlane(new Vec3D(0, 0, 0), new Vec3D(0, 1, 0), clipped);
+                return test.triangleClipAgainstPlane(new Vector3D(0, 0, 0), new Vector3D(0, 1, 0), clipped);
             }
             case 1 ->
             {
-                return test.triangleClipAgainstPlane(new Vec3D(0, getImageHeight() - 1.0, 0), new Vec3D(0, -1, 0), clipped);
+                return test.triangleClipAgainstPlane(new Vector3D(0, getImageHeight() - 1.0, 0), new Vector3D(0, -1, 0), clipped);
             }
             case 2 ->
             {
-                return test.triangleClipAgainstPlane(new Vec3D(0, 0, 0), new Vec3D(1, 0, 0), clipped);
+                return test.triangleClipAgainstPlane(new Vector3D(0, 0, 0), new Vector3D(1, 0, 0), clipped);
             }
             case 3 ->
             {
-                return test.triangleClipAgainstPlane(new Vec3D(getImageWidth() - 1.0, 0, 0), new Vec3D(-1, 0, 0), clipped);
+                return test.triangleClipAgainstPlane(new Vector3D(getImageWidth() - 1.0, 0, 0), new Vector3D(-1, 0, 0), clipped);
             }
             default -> throw new IllegalArgumentException("Invalid value for plane: " + plane);
         }

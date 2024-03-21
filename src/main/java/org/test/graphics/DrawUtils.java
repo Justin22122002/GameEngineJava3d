@@ -1,11 +1,11 @@
-package org.test.gfx;
+package org.test.graphics;
 
 import static org.test.Main.getImageHeight;
 import static org.test.Main.getImageWidth;
-import static org.test.gfx.ColorUtils.CD_GRAY;
-import static org.test.gfx.ColorUtils.CD_WHITE;
-import static org.test.gfx.ColorUtils.blend;
-import static org.test.gfx.ColorUtils.dotColor;
+import static org.test.graphics.ColorUtils.CD_GRAY;
+import static org.test.graphics.ColorUtils.CD_WHITE;
+import static org.test.graphics.ColorUtils.blend;
+import static org.test.graphics.ColorUtils.dotColor;
 
 import java.awt.Graphics2D;
 import java.awt.Image;

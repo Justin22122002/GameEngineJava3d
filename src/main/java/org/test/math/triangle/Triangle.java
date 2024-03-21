@@ -1,20 +1,24 @@
-package org.test.math;
+package org.test.math.triangle;
 
-import org.test.gfx.Texture;
+import org.test.graphics.Texture;
+import org.test.math.ExtraData;
+import org.test.math.vector.Vector2D;
+import org.test.math.vector.Vector3D;
 
 import java.awt.*;
+import java.util.Objects;
 
 import static org.test.math.GeometryUtils.vectorIntersectPlane;
 
 /**
  * Represents a triangle in 3D space.
  */
-public class Triangle
+public class Triangle implements Cloneable
 {
     // Point Coordinates
-    public Vec3D vec3D, vec3D2, vec3D3;
+    public Vector3D vec3D, vec3D2, vec3D3;
     //Texture Coordinates
-    public Vec2D vec2D, vec2D2, vec2D3;
+    public Vector2D vec2D, vec2D2, vec2D3;
     public Color color;
     public double dp;
     public Texture tex;
@@ -26,7 +30,7 @@ public class Triangle
      * @param vec3D2 Second 3D point of the triangle.
      * @param vec3D3 Third 3D point of the triangle.
      */
-    public Triangle(Vec3D vec3D, Vec3D vec3D2, Vec3D vec3D3)
+    public Triangle(Vector3D vec3D, Vector3D vec3D2, Vector3D vec3D3)
     {
         this.vec3D = vec3D;
         this.vec3D2 = vec3D2;
@@ -43,7 +47,7 @@ public class Triangle
      * @param vec2D2 Texture coordinate corresponding to the second 3D point.
      * @param vec2D3 Texture coordinate corresponding to the third 3D point.
      */
-    public Triangle(Vec3D vec3D, Vec3D vec3D2, Vec3D vec3D3, Vec2D vec2D, Vec2D vec2D2, Vec2D vec2D3)
+    public Triangle(Vector3D vec3D, Vector3D vec3D2, Vector3D vec3D3, Vector2D vec2D, Vector2D vec2D2, Vector2D vec2D3)
     {
         this.vec3D = vec3D;
         this.vec3D2 = vec3D2;
@@ -58,12 +62,12 @@ public class Triangle
      */
     public Triangle()
     {
-        this.vec3D = new Vec3D();
-        this.vec3D2 = new Vec3D();
-        this.vec3D3 = new Vec3D();
-        this.vec2D = new Vec2D(0,0);
-        this.vec2D2 = new Vec2D(0,0);
-        this.vec2D3 = new Vec2D(0,0);
+        this.vec3D = new Vector3D();
+        this.vec3D2 = new Vector3D();
+        this.vec3D3 = new Vector3D();
+        this.vec2D = new Vector2D(0,0);
+        this.vec2D2 = new Vector2D(0,0);
+        this.vec2D3 = new Vector2D(0,0);
     }
 
     /**
@@ -89,20 +93,20 @@ public class Triangle
      * @param out     Array to store the resulting triangles after clipping.
      * @return Number of resulting triangles after clipping.
      */
-    public int triangleClipAgainstPlane(Vec3D plane_p, Vec3D plane_n, Triangle[] out)
+    public int triangleClipAgainstPlane(Vector3D plane_p, Vector3D plane_n, Triangle[] out)
     {
         plane_n = plane_n.normalizeVector();
 
-        Vec3D[] inside_points = {new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0)};
+        Vector3D[] inside_points = {new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0)};
         int nInsidePointCount = 0;
 
-        Vec3D[] outside_points = {new Vec3D(0, 0, 0), new Vec3D(0, 0, 0), new Vec3D(0, 0, 0)};
+        Vector3D[] outside_points = {new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0)};
         int nOutsidePointCount = 0;
 
-        Vec2D[] inside_tex = {new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0)};
+        Vector2D[] inside_tex = {new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)};
         int nInsideTexCount = 0;
 
-        Vec2D[] outside_tex = {new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0)};
+        Vector2D[] outside_tex = {new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)};
         int nOutsideTexCount = 0;
 
 
@@ -214,21 +218,21 @@ public class Triangle
                 {
                         new Triangle
                                 (
-                                        new Vec3D(0, 0, 0),
-                                        new Vec3D(0, 0, 0),
-                                        new Vec3D(0, 0, 0),
-                                        new Vec2D(0, 0),
-                                        new Vec2D(0, 0),
-                                        new Vec2D(0, 0)
+                                        new Vector3D(0, 0, 0),
+                                        new Vector3D(0, 0, 0),
+                                        new Vector3D(0, 0, 0),
+                                        new Vector2D(0, 0),
+                                        new Vector2D(0, 0),
+                                        new Vector2D(0, 0)
                                 ),
                         new Triangle
                                 (
-                                        new Vec3D(0, 0, 0),
-                                        new Vec3D(0, 0, 0),
-                                        new Vec3D(0, 0, 0),
-                                        new Vec2D(0, 0),
-                                        new Vec2D(0, 0),
-                                        new Vec2D(0, 0)
+                                        new Vector3D(0, 0, 0),
+                                        new Vector3D(0, 0, 0),
+                                        new Vector3D(0, 0, 0),
+                                        new Vector2D(0, 0),
+                                        new Vector2D(0, 0),
+                                        new Vector2D(0, 0)
                                 )
                 };
     }
@@ -241,5 +245,39 @@ public class Triangle
                 ", vec3D2=" + vec3D2 +
                 ", vec3D3=" + vec3D3 +
                 '}';
+    }
+
+    @Override
+    public Triangle clone()
+    {
+        try
+        {
+            Triangle clone = (Triangle) super.clone();
+            return clone;
+        }
+        catch (CloneNotSupportedException e)
+        {
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Triangle triangle = (Triangle) o;
+        return Objects.equals(vec3D, triangle.vec3D)
+                && Objects.equals(vec3D2, triangle.vec3D2)
+                && Objects.equals(vec3D3, triangle.vec3D3)
+                && Objects.equals(vec2D, triangle.vec2D)
+                && Objects.equals(vec2D2, triangle.vec2D2)
+                && Objects.equals(vec2D3, triangle.vec2D3);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(vec3D, vec3D2, vec3D3, vec2D, vec2D2, vec2D3);
     }
 }

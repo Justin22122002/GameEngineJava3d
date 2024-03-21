@@ -1,4 +1,6 @@
-package org.test.math;
+package org.test.math.triangle;
+
+import org.test.math.triangle.Mesh;
 
 import java.util.ArrayList;
 import java.util.List;

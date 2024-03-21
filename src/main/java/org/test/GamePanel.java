@@ -1,8 +1,12 @@
 package org.test;
 
 import org.test.gamedata.RenderSettings;
-import org.test.gfx.Texture;
-import org.test.math.*;
+import org.test.graphics.Texture;
+import org.test.input.KeyHandler;
+import org.test.math.triangle.Mesh;
+import org.test.math.triangle.PolygonGroup;
+import org.test.math.triangle.Triangle;
+import org.test.math.vector.Vector3D;
 import org.test.renderer.Camera;
 import org.test.renderer.RasterAssembler;
 import org.test.renderer.Rasterizer;
@@ -102,18 +106,18 @@ public class GamePanel extends JPanel implements Runnable
 
     public void update()
     {
-        Vec3D vForward = settings.getvLookDir().normalizeVector(); // Normalisierte Blickrichtung
+        Vector3D vForward = settings.getvLookDir().normalizeVector(); // Normalisierte Blickrichtung
         KeyHandler keyH = settings.getKeyH();
         Camera vCamera = settings.getvCamera();
 
         if (keyH.rightPressed)
         {
-            vCamera.setCam(vCamera.getCam().subtractVector(vForward.crossProduct(new Vec3D(0, 0.1, 0))));
+            vCamera.setCam(vCamera.getCam().subtractVector(vForward.crossProduct(new Vector3D(0, 0.1, 0))));
         }
 
         if (keyH.leftPressed)
         {
-            vCamera.setCam(vCamera.getCam().addVector(vForward.crossProduct(new Vec3D(0, 0.1, 0))));
+            vCamera.setCam(vCamera.getCam().addVector(vForward.crossProduct(new Vector3D(0, 0.1, 0))));
         }
 
         if (keyH.downPressed)
