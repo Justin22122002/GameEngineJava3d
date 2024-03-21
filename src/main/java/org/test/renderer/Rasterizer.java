@@ -34,8 +34,8 @@ public class Rasterizer
         List<Triangle> vecTrianglesToRaster = new ArrayList<>();
 
         // rotation matrix
-        settings.setMatZ(Matrix4x4.rotateMatrixZ(settings.getfTheta() * 0.5));
-        settings.setMatZX(Matrix4x4.rotateMatrixX(settings.getfTheta()));
+        settings.setMatZ(Matrix4x4.rotateMatrixZ(settings.getvCamera().getfTheta() * 0.5));
+        settings.setMatZX(Matrix4x4.rotateMatrixX(settings.getvCamera().getfTheta()));
 
         // distance from cube -> translation matrix
         Matrix4x4 trans = Matrix4x4.translationMatrix(0, 0, 1);
@@ -44,7 +44,13 @@ public class Rasterizer
         Matrix4x4 matWorld = settings.getMatZ().multiplyMatrix(settings.getMatZX());
         matWorld = matWorld.multiplyMatrix(trans);
 
-        Matrix4x4 matView = rasterAssembler.calculateViewMatrix(settings.getfPitch(), settings.getfYaw(), settings.getvCamera(), settings.getvLookDir());
+        Matrix4x4 matView = rasterAssembler.calculateViewMatrix
+                (
+                        settings.getvCamera().getfPitch(),
+                        settings.getvCamera().getfYaw(),
+                        settings.getvCamera(),
+                        settings.getvCamera().getvLookDir()
+                );
 
         for(Mesh mesh: settings.getPolygonGroup().getPolyGroup())
         {

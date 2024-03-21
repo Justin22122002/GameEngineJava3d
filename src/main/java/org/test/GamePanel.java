@@ -106,7 +106,7 @@ public class GamePanel extends JPanel implements Runnable
 
     public void update()
     {
-        Vector3D vForward = settings.getvLookDir().normalizeVector(); // Normalisierte Blickrichtung
+        Vector3D vForward = settings.getvCamera().getvLookDir().normalizeVector(); // Normalisierte Blickrichtung
         KeyHandler keyH = settings.getKeyH();
         Camera vCamera = settings.getvCamera();
 
@@ -142,22 +142,22 @@ public class GamePanel extends JPanel implements Runnable
 
         if (keyH.rightTurn)
         {
-            settings.setfYaw(settings.getfYaw() - 0.008);
+            vCamera.setfYaw(vCamera.getfYaw() - 0.008);
         }
 
         if (keyH.leftTurn)
         {
-            settings.setfYaw(settings.getfYaw() + 0.008);
+            vCamera.setfYaw(vCamera.getfYaw() + 0.008);
         }
 
         if (keyH.upTurn)
         {
-            settings.setfPitch(settings.getfPitch() - 0.008);
+            vCamera.setfPitch(vCamera.getfPitch() - 0.008);
         }
 
         if (keyH.downTurn)
         {
-            settings.setfPitch(settings.getfPitch() + 0.008);
+            vCamera.setfPitch(vCamera.getfPitch() + 0.008);
         }
     }
 
