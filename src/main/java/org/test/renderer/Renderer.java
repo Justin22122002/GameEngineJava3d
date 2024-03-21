@@ -1,6 +1,6 @@
 package org.test.renderer;
 
-import org.test.gamedata.RenderSettings;
+import org.test.renderdata.RenderSettings;
 import org.test.math.triangle.Triangle;
 import org.test.math.vector.Vector3D;
 
@@ -10,12 +10,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.test.Main.getImageHeight;
-import static org.test.Main.getImageWidth;
 import static org.test.graphics.ColorUtils.CD_BLACK;
 import static org.test.graphics.DrawUtils.TexturedTriangle;
 import static org.test.graphics.DrawUtils.slFill;
 import static org.test.math.triangle.Triangle.getNearestPlane;
+import static org.test.renderer.ImageConfig.getImageHeight;
+import static org.test.renderer.ImageConfig.getImageWidth;
 
 /**
  * The Renderer class is responsible for rendering triangles onto a graphics context.
@@ -56,7 +56,6 @@ public class Renderer
                     listTriangles.pollFirst();
                     nNewTriangles--;
 
-                    assert test != null;
                     trisToAdd = getClippedTriangles(test, clipped, plane);
 
                     listTriangles.addAll(Arrays.asList(clipped).subList(0, trisToAdd));

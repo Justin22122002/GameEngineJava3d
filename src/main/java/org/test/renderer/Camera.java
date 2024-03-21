@@ -2,12 +2,12 @@ package org.test.renderer;
 
 import org.test.math.vector.Vector3D;
 
-import static org.test.Main.getImageHeight;
-import static org.test.Main.getImageWidth;
+import static org.test.renderer.ImageConfig.getImageHeight;
+import static org.test.renderer.ImageConfig.getImageWidth;
 
 public class Camera
 {
-    private Vector3D cam;
+    private Vector3D position;
 
     private double fNear = 0.1; // nearest clip plane
     private double fFar = 1000.0;  // furthers clip plane
@@ -16,31 +16,31 @@ public class Camera
     private double fYaw = 0.0;
     private double fPitch = 0.0;
     private double fTheta; // angle used in rotation matrix
-    private Vector3D vLookDir; // camera that follows along the look at direction
+    private Vector3D vLookDir; // position that follows along the look at direction
 
     public Camera(double x, double y, double z)
     {
-        cam = new Vector3D(0,0,0);
+        position = new Vector3D(0,0,0);
         vLookDir = new Vector3D(0, 0, 1);
 
-        cam.x = x;
-        cam.y = y;
-        cam.z = z;
+        position.x = x;
+        position.y = y;
+        position.z = z;
     }
 
     public Camera()
     {
-        cam = new Vector3D(0,0,0);
+        position = new Vector3D(0,0,0);
     }
 
-    public Vector3D getCam()
+    public Vector3D getPosition()
     {
-        return cam;
+        return position;
     }
 
-    public void setCam(Vector3D cam)
+    public void setPosition(Vector3D position)
     {
-        this.cam = cam;
+        this.position = position;
     }
 
     public double getfNear()

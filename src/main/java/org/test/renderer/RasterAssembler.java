@@ -4,8 +4,8 @@ import org.test.math.matrix.Matrix4x4;
 import org.test.math.triangle.Triangle;
 import org.test.math.vector.Vector3D;
 
-import static org.test.Main.getImageHeight;
-import static org.test.Main.getImageWidth;
+import static org.test.renderer.ImageConfig.getImageHeight;
+import static org.test.renderer.ImageConfig.getImageWidth;
 
 /**
  * The RasterAssembler class provides methods for assembling, transforming, and projecting triangles for rendering.
@@ -81,10 +81,10 @@ public class RasterAssembler
         Matrix4x4 matCameraRot = Matrix4x4.rotateMatrixX(fPitch).multiplyMatrix(Matrix4x4.rotateMatrixY(fYaw));
         vLookDir.setVector(matCameraRot.multiplyMatrixVector(vTarget));
 
-        vTarget = camera.getCam().addVector(vLookDir);
+        vTarget = camera.getPosition().addVector(vLookDir);
 
         // using the information provided above to define a camera matrix
-        Matrix4x4 matCamera = new Matrix4x4().pointAtMatrix(camera.getCam(), vTarget, vUp);
+        Matrix4x4 matCamera = new Matrix4x4().pointAtMatrix(camera.getPosition(), vTarget, vUp);
 
         // matView
         return matCamera.inverseMatrix();

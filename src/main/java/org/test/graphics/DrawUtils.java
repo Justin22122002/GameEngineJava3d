@@ -1,7 +1,7 @@
 package org.test.graphics;
 
-import static org.test.Main.getImageHeight;
-import static org.test.Main.getImageWidth;
+import static org.test.renderer.ImageConfig.getImageHeight;
+import static org.test.renderer.ImageConfig.getImageWidth;
 import static org.test.graphics.ColorUtils.CD_GRAY;
 import static org.test.graphics.ColorUtils.CD_WHITE;
 import static org.test.graphics.ColorUtils.blend;

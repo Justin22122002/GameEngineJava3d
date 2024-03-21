@@ -1,18 +1,17 @@
-package org.test.gamedata;
+package org.test.renderdata;
 
 import org.test.input.KeyHandler;
 import org.test.graphics.ZBuffer;
 import org.test.math.matrix.Matrix4x4;
 import org.test.math.triangle.PolygonGroup;
-import org.test.math.vector.Vector3D;
 import org.test.renderer.Camera;
 
 import java.awt.*;
 import java.awt.image.ColorModel;
 import java.awt.image.MemoryImageSource;
 
-import static org.test.Main.getImageHeight;
-import static org.test.Main.getImageWidth;
+import static org.test.renderer.ImageConfig.getImageHeight;
+import static org.test.renderer.ImageConfig.getImageWidth;
 
 public class RenderSettings
 {
