@@ -27,4 +27,5 @@ public class GeometryUtils
         Vec3D lineToIntersect = lineStartToEnd.multiplyVector(t);
         return lineStart.addVector(lineToIntersect);
     }
+
 }

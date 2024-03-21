@@ -208,6 +208,31 @@ public class Triangle
         return 2;
     }
 
+    public static Triangle[] getNearestPlane()
+    {
+        return new Triangle[]
+                {
+                        new Triangle
+                                (
+                                        new Vec3D(0, 0, 0),
+                                        new Vec3D(0, 0, 0),
+                                        new Vec3D(0, 0, 0),
+                                        new Vec2D(0, 0),
+                                        new Vec2D(0, 0),
+                                        new Vec2D(0, 0)
+                                ),
+                        new Triangle
+                                (
+                                        new Vec3D(0, 0, 0),
+                                        new Vec3D(0, 0, 0),
+                                        new Vec3D(0, 0, 0),
+                                        new Vec2D(0, 0),
+                                        new Vec2D(0, 0),
+                                        new Vec2D(0, 0)
+                                )
+                };
+    }
+
     @Override
     public String toString()
     {

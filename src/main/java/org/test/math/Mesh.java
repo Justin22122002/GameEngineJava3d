@@ -15,11 +15,7 @@ public class Mesh
         this.triangles = triangles;
     }
 
-    public Mesh()
-    {
-    }
-
-    public String[] readFromFile(String filename)
+    public static String[] readFromFile(String filename)
     {
         File file = new File(filename);
         List<String> contents = new ArrayList<>();
@@ -49,7 +45,7 @@ public class Mesh
     /**
      * !!! OBJ-Dateiformat !!!
      */
-    public List<Triangle> ReadOBJFile(String f, boolean textured)
+    public static List<Triangle> ReadOBJFile(String f, boolean textured)
     {
         String[] data = readFromFile(f);
         List<float[]> vertices = new ArrayList<>();
