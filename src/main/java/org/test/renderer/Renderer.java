@@ -103,7 +103,7 @@ public class Renderer
             {
                 return test.triangleClipAgainstPlane(new Vector3D(getImageWidth() - 1.0, 0, 0), new Vector3D(-1, 0, 0), clipped);
             }
-            default -> throw new IllegalArgumentException(STR."Invalid value for plane: \{plane}");
+            default -> throw new IllegalArgumentException("Invalid value for plane: " + plane);
         }
     }
 

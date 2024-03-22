@@ -245,7 +245,17 @@ public class Triangle implements Cloneable
     @Override
     public String toString()
     {
-        return STR."Triangle{vec3D=\{vec3D}, vec3D2=\{vec3D2}, vec3D3=\{vec3D3}, vec2D=\{vec2D}, vec2D2=\{vec2D2}, vec2D3=\{vec2D3}, color=\{color}, dp=\{dp}, tex=\{tex}\{'}'}";
+        return "Triangle{" +
+                "vec3D=" + vec3D +
+                ", vec3D2=" + vec3D2 +
+                ", vec3D3=" + vec3D3 +
+                ", vec2D=" + vec2D +
+                ", vec2D2=" + vec2D2 +
+                ", vec2D3=" + vec2D3 +
+                ", color=" + color +
+                ", dp=" + dp +
+                ", tex=" + tex +
+                '}';
     }
 
     @Override
