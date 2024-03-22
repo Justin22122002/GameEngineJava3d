@@ -12,9 +12,11 @@ import java.util.regex.Pattern;
 public class Mesh
 {
     public List<Triangle> triangles;
+    public DrawMode drawMode;
 
-    public Mesh(List<Triangle> triangles)
+    public Mesh(List<Triangle> triangles, DrawMode drawMode)
     {
+        this.drawMode = drawMode;
         this.triangles = triangles;
     }
 

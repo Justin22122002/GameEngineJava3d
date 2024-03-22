@@ -1,6 +1,6 @@
 package org.test.renderer;
 
-public class ImageConfig
+public class PanelConfig
 {
     private static final double WIDTH = 1440.0;
     private static final double HEIGHT = 1080.0;
@@ -9,7 +9,6 @@ public class ImageConfig
     {
         return WIDTH;
     }
-
     public static double getImageHeight()
     {
         return HEIGHT;

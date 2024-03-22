@@ -1,7 +1,7 @@
 package org.test.graphics;
 
-import static org.test.renderer.ImageConfig.getImageHeight;
-import static org.test.renderer.ImageConfig.getImageWidth;
+import static org.test.renderer.PanelConfig.getImageHeight;
+import static org.test.renderer.PanelConfig.getImageWidth;
 import static org.test.graphics.ColorUtils.CD_GRAY;
 import static org.test.graphics.ColorUtils.CD_WHITE;
 import static org.test.graphics.ColorUtils.blend;
@@ -105,7 +105,7 @@ public class DrawUtils
         }
     }
 
-    public static void slFillTriangle(int[] canvas, int x1, int y1, int x2, int y2, int x3, int y3, int col)
+    public static void slFillTriangle(int[] canvas, int x1, int y1, int x2, int y2, int x3, int y3, int col, ZBuffer zBuffer)
     {
         int t1x = 0, t2x = 0, y = 0, minx = 0, maxx = 0, t1xp = 0, t2xp = 0;
         boolean changed1 = false;
@@ -595,10 +595,8 @@ public class DrawUtils
                         zBuffer.setDepthValue(j, i, Math.abs(tex_w));
                     }
                     t += tstep;
-
                 }
             }
-
         }
     }
 

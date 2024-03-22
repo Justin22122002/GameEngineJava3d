@@ -1,99 +1,78 @@
 package org.test.scene;
 
-import org.test.graphics.Texture;
-import org.test.math.triangle.Mesh;
-import org.test.math.triangle.PolygonGroup;
-import org.test.math.triangle.Triangle;
 import org.test.math.vector.Vector3D;
+import org.test.objects.AbstractObject;
+import org.test.objects.Car;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
 public class Scene extends AbstractScene
 {
+    Car car1;
+
     @Override
     public void update()
     {
-        Vector3D vForward = vCamera.getvLookDir().normalizeVector(); // Normalisierte Blickrichtung
+        Vector3D vForward = getvCamera().getvLookDir().normalizeVector(); // Normalisierte Blickrichtung
 
         if (keyH.rightPressed)
         {
-            vCamera.setPosition(vCamera.getPosition().subtractVector(vForward.crossProduct(new Vector3D(0, 0.1, 0))));
+            getvCamera().setPosition(getvCamera().getPosition().subtractVector(vForward.crossProduct(new Vector3D(0, 0.1, 0))));
         }
 
         if (keyH.leftPressed)
         {
-            vCamera.setPosition(vCamera.getPosition().addVector(vForward.crossProduct(new Vector3D(0, 0.1, 0))));
+            getvCamera().setPosition(getvCamera().getPosition().addVector(vForward.crossProduct(new Vector3D(0, 0.1, 0))));
         }
 
         if (keyH.downPressed)
         {
-            vCamera.getPosition().y += 0.1;
+            getvCamera().getPosition().y += 0.1;
         }
 
         if (keyH.upPressed)
         {
-            vCamera.getPosition().y -= 0.1;
+            getvCamera().getPosition().y -= 0.1;
         }
 
         if (keyH.frontPressed)
         {
-            vCamera.setPosition(vCamera.getPosition().addVector(vForward));
+            getvCamera().setPosition(getvCamera().getPosition().addVector(vForward));
         }
 
         if (keyH.backPressed)
         {
-            vCamera.setPosition(vCamera.getPosition().subtractVector(vForward));
+            getvCamera().setPosition(getvCamera().getPosition().subtractVector(vForward));
         }
 
         if (keyH.rightTurn)
         {
-            vCamera.setfYaw(vCamera.getfYaw() - 0.008);
+            getvCamera().setfYaw(getvCamera().getfYaw() - 0.008);
         }
 
         if (keyH.leftTurn)
         {
-            vCamera.setfYaw(vCamera.getfYaw() + 0.008);
+            getvCamera().setfYaw(getvCamera().getfYaw() + 0.008);
         }
 
         if (keyH.upTurn)
         {
-            vCamera.setfPitch(vCamera.getfPitch() - 0.008);
+            getvCamera().setfPitch(getvCamera().getfPitch() - 0.008);
         }
 
         if (keyH.downTurn)
         {
-            vCamera.setfPitch(vCamera.getfPitch() + 0.008);
+            getvCamera().setfPitch(getvCamera().getfPitch() + 0.008);
         }
+
+        car1.update();
     }
 
     @Override
-    public PolygonGroup initializeObjects()
+    public List<AbstractObject> initializeObjects()
     {
-        PolygonGroup polygonGroup = new PolygonGroup();
+        car1 = new Car();
 
-        BufferedImage img = null;
-        try
-        {
-            img = ImageIO.read(new File("./car4.png"));
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-
-        Mesh mesh = new Mesh(Mesh.ReadOBJFile("car4.obj", true));
-
-        for(Triangle t : mesh.triangles)
-        {
-            assert img != null;
-            t.tex = new Texture(img);
-        }
-
-        polygonGroup.addMesh(mesh);
-
-        return polygonGroup;
+        return List.of(car1);
     }
 }

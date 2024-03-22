@@ -2,8 +2,8 @@ package org.test.renderer;
 
 import org.test.math.vector.Vector3D;
 
-import static org.test.renderer.ImageConfig.getImageHeight;
-import static org.test.renderer.ImageConfig.getImageWidth;
+import static org.test.renderer.PanelConfig.getImageHeight;
+import static org.test.renderer.PanelConfig.getImageWidth;
 
 public class Camera
 {
@@ -20,17 +20,14 @@ public class Camera
 
     public Camera(double x, double y, double z)
     {
-        position = new Vector3D(0,0,0);
+        position = new Vector3D(x,y,z);
         vLookDir = new Vector3D(0, 0, 1);
-
-        position.x = x;
-        position.y = y;
-        position.z = z;
     }
 
     public Camera()
     {
         position = new Vector3D(0,0,0);
+        vLookDir = new Vector3D(0, 0, 1);
     }
 
     public Vector3D getPosition()

@@ -55,7 +55,7 @@ public class Vector3D implements Cloneable
      */
     public Vector3D addVector(Vector3D in)
     {
-        return new Vector3D(in.x + this.x, in.y + this.y, in.z + this.z);
+        return new Vector3D(this.x + in.x, this.y + in.y, this.z + in.z);
     }
 
     /**
@@ -187,11 +187,7 @@ public class Vector3D implements Cloneable
     @Override
     public String toString()
     {
-        return "Vector3D{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                '}';
+        return STR."Vector3D{x=\{x}, y=\{y}, z=\{z}\{'}'}";
     }
 
     @Override

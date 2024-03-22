@@ -240,11 +240,7 @@ public class Triangle implements Cloneable
     @Override
     public String toString()
     {
-        return "Triangle{" +
-                "vec3D=" + vec3D +
-                ", vec3D2=" + vec3D2 +
-                ", vec3D3=" + vec3D3 +
-                '}';
+        return STR."Triangle{vec3D=\{vec3D}, vec3D2=\{vec3D2}, vec3D3=\{vec3D3}\{'}'}";
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.test.renderer;
 
+import org.test.math.triangle.DrawMode;
 import org.test.renderdata.RenderSettings;
 import org.test.math.matrix.Matrix4x4;
 import org.test.math.triangle.Mesh;
@@ -7,7 +8,9 @@ import org.test.math.triangle.Triangle;
 import org.test.math.vector.Vector3D;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.test.math.triangle.Triangle.getNearestPlane;
 
@@ -37,11 +40,11 @@ public class Rasterizer
     /**
      * Rasterizes geometric primitives and returns a list of triangles for rendering.
      *
-     * @return A list of triangles to be rasterized.
+     * @return A map of triangles to be rasterized, with the content, if the mesh is textured or not.
      */
-    public List<Triangle> raster()
+    public Map<List<Triangle>, DrawMode> raster()
     {
-        List<Triangle> vecTrianglesToRaster = new ArrayList<>();
+        Map<List<Triangle>, DrawMode> vecTrianglesToRasterMap = new HashMap<>();
 
         // Rotation matrix
         settings.setMatZ(Matrix4x4.rotateMatrixZ(settings.getvCamera().getfTheta() * 0.5));
@@ -57,12 +60,13 @@ public class Rasterizer
         Matrix4x4 matView = rasterAssembler.calculateViewMatrix(
                 settings.getvCamera().getfPitch(),
                 settings.getvCamera().getfYaw(),
-                settings.getvCamera(),
-                settings.getvCamera().getvLookDir()
+                settings.getvCamera()
         );
 
         for (Mesh mesh : settings.getPolygonGroup().getPolyGroup())
         {
+            List<Triangle> vecTrianglesToRaster = new ArrayList<>();
+
             for (Triangle tri : mesh.triangles)
             {
                 Triangle triProjection = new Triangle(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
@@ -119,8 +123,10 @@ public class Rasterizer
                     }
                 }
             }
+
+            vecTrianglesToRasterMap.put(vecTrianglesToRaster, mesh.drawMode);
         }
 
-        return vecTrianglesToRaster;
+        return vecTrianglesToRasterMap;
     }
 }

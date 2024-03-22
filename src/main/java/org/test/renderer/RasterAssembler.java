@@ -4,8 +4,8 @@ import org.test.math.matrix.Matrix4x4;
 import org.test.math.triangle.Triangle;
 import org.test.math.vector.Vector3D;
 
-import static org.test.renderer.ImageConfig.getImageHeight;
-import static org.test.renderer.ImageConfig.getImageWidth;
+import static org.test.renderer.PanelConfig.getImageHeight;
+import static org.test.renderer.PanelConfig.getImageWidth;
 
 /**
  * The RasterAssembler class provides methods for assembling, transforming, and projecting triangles for rendering.
@@ -71,17 +71,16 @@ public class RasterAssembler
      * @param fPitch    The pitch angle.
      * @param fYaw      The yaw angle.
      * @param camera    The camera object.
-     * @param vLookDir  The look direction vector.
      * @return The calculated view matrix.
      */
-    public Matrix4x4 calculateViewMatrix(double fPitch, double fYaw, Camera camera, Vector3D vLookDir)
+    public Matrix4x4 calculateViewMatrix(double fPitch, double fYaw, Camera camera)
     {
         Vector3D vUp = new Vector3D(0, 1, 0);
         Vector3D vTarget = new Vector3D(0, 0, 1);
         Matrix4x4 matCameraRot = Matrix4x4.rotateMatrixX(fPitch).multiplyMatrix(Matrix4x4.rotateMatrixY(fYaw));
-        vLookDir.setVector(matCameraRot.multiplyMatrixVector(vTarget));
-
-        vTarget = camera.getPosition().addVector(vLookDir);
+        
+        camera.setvLookDir(matCameraRot.multiplyMatrixVector(vTarget));
+        vTarget = camera.getPosition().addVector(camera.getvLookDir());
 
         // using the information provided above to define a camera matrix
         Matrix4x4 matCamera = new Matrix4x4().pointAtMatrix(camera.getPosition(), vTarget, vUp);

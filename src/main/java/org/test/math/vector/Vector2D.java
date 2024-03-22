@@ -40,11 +40,7 @@ public class Vector2D implements Cloneable
     @Override
     public String toString()
     {
-        return "Vec2D{" +
-                "u=" + u +
-                ", v=" + v +
-                ", w=" + w +
-                '}';
+        return STR."Vec2D{u=\{u}, v=\{v}, w=\{w}\{'}'}";
     }
 
     /**

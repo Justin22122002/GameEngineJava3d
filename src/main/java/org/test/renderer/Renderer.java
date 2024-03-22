@@ -1,21 +1,22 @@
 package org.test.renderer;
 
+import org.test.math.triangle.DrawMode;
+import org.test.math.triangle.Mesh;
 import org.test.renderdata.RenderSettings;
 import org.test.math.triangle.Triangle;
 import org.test.math.vector.Vector3D;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.test.graphics.ColorUtils.CD_BLACK;
-import static org.test.graphics.DrawUtils.TexturedTriangle;
-import static org.test.graphics.DrawUtils.slFill;
+import static org.test.graphics.ColorUtils.CD_WHITE;
+import static org.test.graphics.DrawUtils.*;
 import static org.test.math.triangle.Triangle.getNearestPlane;
-import static org.test.renderer.ImageConfig.getImageHeight;
-import static org.test.renderer.ImageConfig.getImageWidth;
+import static org.test.renderer.PanelConfig.getImageHeight;
+import static org.test.renderer.PanelConfig.getImageWidth;
 
 /**
  * The Renderer class is responsible for rendering triangles onto a graphics context.
@@ -27,45 +28,46 @@ public class Renderer
     /**
      * Renders the provided list of triangles onto the specified graphics context.
      *
-     * @param g2                   The graphics context.
-     * @param vecTrianglesToRaster The list of triangles to render.
-     * @param jPanel               The panel on which to render the triangles.
+     * @param vecTrianglesToRasterMap A map of triangles to be rasterized, with the content, if the mesh is textured or not.
      */
-    public void render(List<Triangle> vecTrianglesToRaster)
+    public void render(Map<List<Triangle>, DrawMode> vecTrianglesToRasterMap)
     {
         clearScreen();
         resetZBuffer();
 
         // print to screen
-        for (Triangle t : vecTrianglesToRaster)
+        for (List<Triangle> triList : vecTrianglesToRasterMap.keySet())
         {
-            Triangle[] clipped;
-            LinkedList<Triangle> listTriangles = new LinkedList<>();
-            listTriangles.add(t);
-            int nNewTriangles = 1;
-
-            for (int plane = 0; plane < 4; plane++)
+            for (Triangle t : triList)
             {
-                int trisToAdd;
+                Triangle[] clipped;
+                LinkedList<Triangle> listTriangles = new LinkedList<>();
+                listTriangles.add(t);
+                int nNewTriangles = 1;
 
-                while (nNewTriangles > 0)
+                for (int plane = 0; plane < 4; plane++)
                 {
-                    clipped = getNearestPlane();
+                    int trisToAdd;
 
-                    Triangle test = listTriangles.peek();
-                    listTriangles.pollFirst();
-                    nNewTriangles--;
+                    while (nNewTriangles > 0)
+                    {
+                        clipped = getNearestPlane();
 
-                    trisToAdd = getClippedTriangles(test, clipped, plane);
+                        Triangle test = listTriangles.peek();
+                        listTriangles.pollFirst();
+                        nNewTriangles--;
 
-                    listTriangles.addAll(Arrays.asList(clipped).subList(0, trisToAdd));
+                        trisToAdd = getClippedTriangles(test, clipped, plane);
+
+                        listTriangles.addAll(Arrays.asList(clipped).subList(0, trisToAdd));
+                    }
+                    nNewTriangles = listTriangles.size();
                 }
-                nNewTriangles = listTriangles.size();
-            }
 
-            for (Triangle triangle : listTriangles)
-            {
-                textureTriangle(triangle);
+                for (Triangle triangle : listTriangles)
+                {
+                    textureTriangle(triangle, vecTrianglesToRasterMap.get(triList));
+                }
             }
         }
 
@@ -101,7 +103,7 @@ public class Renderer
             {
                 return test.triangleClipAgainstPlane(new Vector3D(getImageWidth() - 1.0, 0, 0), new Vector3D(-1, 0, 0), clipped);
             }
-            default -> throw new IllegalArgumentException("Invalid value for plane: " + plane);
+            default -> throw new IllegalArgumentException(STR."Invalid value for plane: \{plane}");
         }
     }
 
@@ -109,13 +111,21 @@ public class Renderer
      * Renders a textured triangle onto the screen.
      *
      * @param triangle The triangle to render.
+     * @param drawMode option for rendering the triangle
      */
-    private void textureTriangle(Triangle triangle)
+    private void textureTriangle(Triangle triangle, DrawMode drawMode)
     {
-        TexturedTriangle((int) triangle.vec3D.x, (int) triangle.vec3D.y, triangle.vec2D.u, triangle.vec2D.v, triangle.vec2D.w,
+        switch (drawMode)
+        {
+            case DrawMode.TEXTURED -> TexturedTriangle((int) triangle.vec3D.x, (int) triangle.vec3D.y, triangle.vec2D.u, triangle.vec2D.v, triangle.vec2D.w,
                 (int) triangle.vec3D2.x, (int) triangle.vec3D2.y, triangle.vec2D2.u, triangle.vec2D2.v, triangle.vec2D2.w,
                 (int) triangle.vec3D3.x, (int) triangle.vec3D3.y, triangle.vec2D3.u, triangle.vec2D3.v, triangle.vec2D3.w,
                 triangle.tex, 0, false, false, settings.getPixels(), settings.getzBuffer(), triangle.dp);
+            case DrawMode.WIREFRAME -> slDrawTriangle(settings.getPixels(), (int) triangle.vec3D.x, (int) triangle.vec3D.y, (int) triangle.vec3D2.x, (int) triangle.vec3D2.y,
+                    (int) triangle.vec3D3.x, (int) triangle.vec3D3.y, CD_WHITE);
+            case DrawMode.SURFACE -> slFillTriangle(settings.getPixels(),(int)triangle.vec3D.x,(int)triangle.vec3D.y,(int)triangle.vec3D2.x,(int)triangle.vec3D2.y,
+                    (int)triangle.vec3D3.x,(int)triangle.vec3D3.y,triangle.color.getRGB(), settings.getzBuffer());
+        }
     }
 
     /**

@@ -10,8 +10,8 @@ import java.awt.*;
 import java.awt.image.ColorModel;
 import java.awt.image.MemoryImageSource;
 
-import static org.test.renderer.ImageConfig.getImageHeight;
-import static org.test.renderer.ImageConfig.getImageWidth;
+import static org.test.renderer.PanelConfig.getImageHeight;
+import static org.test.renderer.PanelConfig.getImageWidth;
 
 public class RenderSettings
 {
@@ -26,10 +26,7 @@ public class RenderSettings
 
     private KeyHandler keyH;
 
-    // Frames per second
-    private double fps = 60;
-
-    // Projection matrix
+    private double fps = 60; // Frames per second
     private Matrix4x4 matProj; // projection matrix
     private Matrix4x4 matZ, matZX; // rotation matrix
     private PolygonGroup polygonGroup; // stores all Objects

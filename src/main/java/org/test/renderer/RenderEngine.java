@@ -1,15 +1,21 @@
 package org.test.renderer;
 
+import org.test.math.triangle.DrawMode;
+import org.test.math.triangle.Mesh;
+import org.test.math.triangle.PolygonGroup;
 import org.test.math.triangle.Triangle;
+import org.test.math.vector.Vector3D;
+import org.test.objects.AbstractObject;
 import org.test.renderdata.RenderSettings;
 import org.test.scene.AbstractScene;
 
 import javax.swing.*;
 
 import java.util.List;
+import java.util.Map;
 
-import static org.test.renderer.ImageConfig.getImageHeight;
-import static org.test.renderer.ImageConfig.getImageWidth;
+import static org.test.renderer.PanelConfig.getImageHeight;
+import static org.test.renderer.PanelConfig.getImageWidth;
 
 public class RenderEngine implements Runnable
 {
@@ -83,14 +89,20 @@ public class RenderEngine implements Runnable
 
     public void initializeMesh()
     {
-        settings.setPolygonGroup(scene.initializeObjects());
+        var poly = new PolygonGroup();
+
+        for (AbstractObject object: scene.initializeObjects())
+        {
+            poly.getPolyGroup().addAll(object.getMeshes());
+        }
+        settings.setPolygonGroup(poly);
     }
 
     public void update()
     {
-        List<Triangle> trisToRender = rasterizer.raster();
-        renderer.render(trisToRender);
         scene.update();
+        Map<List<Triangle>, DrawMode> trisToRender = rasterizer.raster();
+        renderer.render(trisToRender);
     }
 
     public AbstractScene getScene()

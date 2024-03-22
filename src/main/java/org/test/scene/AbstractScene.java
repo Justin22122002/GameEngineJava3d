@@ -1,8 +1,10 @@
 package org.test.scene;
 
 import org.test.input.KeyHandler;
-import org.test.math.triangle.PolygonGroup;
+import org.test.objects.AbstractObject;
 import org.test.renderer.Camera;
+
+import java.util.List;
 
 public abstract class AbstractScene
 {
@@ -10,7 +12,7 @@ public abstract class AbstractScene
     protected KeyHandler keyH;
 
     public abstract void update();
-    public abstract PolygonGroup initializeObjects();
+    public abstract List<AbstractObject> initializeObjects();
 
     public Camera getvCamera()
     {

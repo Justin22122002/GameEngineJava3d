@@ -5,8 +5,8 @@ import org.test.renderdata.RenderSettings;
 import javax.swing.*;
 import java.awt.*;
 
-import static org.test.renderer.ImageConfig.getImageHeight;
-import static org.test.renderer.ImageConfig.getImageWidth;
+import static org.test.renderer.PanelConfig.getImageHeight;
+import static org.test.renderer.PanelConfig.getImageWidth;
 
 public class RenderPanel extends JPanel
 {
