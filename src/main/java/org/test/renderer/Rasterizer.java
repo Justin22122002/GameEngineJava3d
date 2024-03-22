@@ -7,10 +7,7 @@ import org.test.math.triangle.Mesh;
 import org.test.math.triangle.Triangle;
 import org.test.math.vector.Vector3D;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.test.math.triangle.Triangle.getNearestPlane;
 
@@ -47,10 +44,10 @@ public class Rasterizer
         Map<List<Triangle>, DrawMode> vecTrianglesToRasterMap = new HashMap<>();
 
         // Rotation matrix
-        settings.setMatZ(Matrix4x4.rotateMatrixZ(settings.getvCamera().getfTheta() * 0.5));
+        settings.setMatZ(Matrix4x4.rotateMatrixZ(settings.getvCamera().getfTheta()));
         settings.setMatZX(Matrix4x4.rotateMatrixX(settings.getvCamera().getfTheta()));
 
-        // Distance from cube -> translation matrix
+        // Translation matrix
         Matrix4x4 trans = Matrix4x4.translationMatrix(0, 0, 1);
 
         // Matrix multiplication to accumulate multiple transformations
@@ -69,9 +66,9 @@ public class Rasterizer
 
             for (Triangle tri : mesh.triangles)
             {
-                Triangle triProjection = new Triangle(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
-                Triangle triTrans = new Triangle(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
-                Triangle triViewed = new Triangle(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
+                Triangle triProjection = new Triangle();
+                Triangle triTrans = new Triangle();
+                Triangle triViewed = new Triangle();
 
                 // Assemble World Matrix
                 rasterAssembler.assembleWorldMatrix(triTrans, tri, matWorld);
@@ -100,7 +97,7 @@ public class Rasterizer
                     // CLIP TRIANGLE AGAINST NEAR PLANE
                     int clippedTriangles;
                     Triangle[] clipped = getNearestPlane();
-                    clippedTriangles = triViewed.triangleClipAgainstPlane(new Vector3D(0, 0, 0.1d), new Vector3D(0, 0, 1), clipped);
+                    clippedTriangles = triViewed.triangleClipAgainstPlane(new Vector3D(0, 0, 0.1), new Vector3D(0, 0, 1), clipped);
 
                     for (int n = 0; n < clippedTriangles; n++)
                     {

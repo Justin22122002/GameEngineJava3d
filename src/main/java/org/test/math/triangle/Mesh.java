@@ -4,6 +4,7 @@ import org.test.math.vector.Vector2D;
 import org.test.math.vector.Vector3D;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -44,7 +45,8 @@ public class Mesh
                 e.printStackTrace();
             }
         }
-        return contents.toArray(new String[contents.size()]);
+        else throw new IllegalArgumentException("File not found");
+        return contents.toArray(new String[0]);
     }
 
     /**
@@ -123,20 +125,20 @@ public class Mesh
                             (
                                     new Vector3D
                                             (
-                                                    -vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
-                                                    -vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
+                                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
+                                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl1[0]) - 1)[2]
                                             ),
                                     new Vector3D
                                             (
-                                                    -vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
-                                                    -vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
+                                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
+                                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl2[0]) - 1)[2]
                                             ),
                                     new Vector3D
                                             (
-                                                    -vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
-                                                    -vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
+                                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
+                                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl3[0]) - 1)[2]
                                             )
                             );

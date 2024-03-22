@@ -4,7 +4,6 @@ import org.test.graphics.Texture;
 import org.test.math.triangle.DrawMode;
 import org.test.math.triangle.Mesh;
 import org.test.math.triangle.Triangle;
-import org.test.math.vector.Vector3D;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -14,8 +13,6 @@ import java.util.List;
 
 public class Car extends AbstractObject
 {
-    private Mesh carMesh;
-
     @Override
     protected List<Mesh> loadObject()
     {
@@ -29,7 +26,7 @@ public class Car extends AbstractObject
             ex.printStackTrace();
         }
 
-        carMesh = new Mesh(Mesh.ReadOBJFile("./assets/car4/car4.obj", true), DrawMode.TEXTURED);
+        Mesh carMesh = new Mesh(Mesh.ReadOBJFile("./assets/car4/car4.obj", true), DrawMode.TEXTURED);
 
         for(Triangle t : carMesh.triangles)
         {
@@ -38,16 +35,5 @@ public class Car extends AbstractObject
         }
 
         return List.of(carMesh);
-    }
-
-    @Override
-    public void update()
-    {
-        move(new Vector3D(0, 0, -0.01));
-    }
-
-    public void setDrawMode(DrawMode drawMode)
-    {
-        this.carMesh.drawMode = drawMode;
     }
 }

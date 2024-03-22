@@ -6,6 +6,7 @@ import org.test.math.vector.Vector2D;
 import org.test.math.vector.Vector3D;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static org.test.math.GeometryUtils.vectorIntersectPlane;
@@ -35,6 +36,9 @@ public class Triangle implements Cloneable
         this.vec3D = vec3D;
         this.vec3D2 = vec3D2;
         this.vec3D3 = vec3D3;
+        this.vec2D = new Vector2D();
+        this.vec2D2 = new Vector2D();
+        this.vec2D3 = new Vector2D();
     }
 
     /**
@@ -65,9 +69,9 @@ public class Triangle implements Cloneable
         this.vec3D = new Vector3D();
         this.vec3D2 = new Vector3D();
         this.vec3D3 = new Vector3D();
-        this.vec2D = new Vector2D(0,0);
-        this.vec2D2 = new Vector2D(0,0);
-        this.vec2D3 = new Vector2D(0,0);
+        this.vec2D = new Vector2D();
+        this.vec2D2 = new Vector2D();
+        this.vec2D3 = new Vector2D();
     }
 
     /**
@@ -141,6 +145,7 @@ public class Triangle implements Cloneable
             outside_points[nOutsidePointCount++] = this.vec3D3;
             outside_tex[nOutsideTexCount++] = this.vec2D3;
         }
+
 
         if (nInsidePointCount == 0)
         {
@@ -240,7 +245,7 @@ public class Triangle implements Cloneable
     @Override
     public String toString()
     {
-        return STR."Triangle{vec3D=\{vec3D}, vec3D2=\{vec3D2}, vec3D3=\{vec3D3}\{'}'}";
+        return STR."Triangle{vec3D=\{vec3D}, vec3D2=\{vec3D2}, vec3D3=\{vec3D3}, vec2D=\{vec2D}, vec2D2=\{vec2D2}, vec2D3=\{vec2D3}, color=\{color}, dp=\{dp}, tex=\{tex}\{'}'}";
     }
 
     @Override

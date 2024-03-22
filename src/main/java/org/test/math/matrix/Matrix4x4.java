@@ -207,17 +207,12 @@ public class Matrix4x4 implements Cloneable
     public Matrix4x4 pointAtMatrix(Vector3D pos, Vector3D target, Vector3D up)
     {
         // CALCULATE THE NEW FORWARD DIRECTION
-        Vector3D newForward = new Vector3D(0, 0, 0);
-
-        newForward = target.subtractVector(pos);
+        Vector3D newForward = target.subtractVector(pos);
         newForward = newForward.normalizeVector();
 
         // CALCULATE THE NEW UP DIRECTION
-        Vector3D a = new Vector3D(0, 0, 0);
-        Vector3D newUp;
-
-        a = newForward.multiplyVector(up.dotProduct(newForward));
-        newUp = up.subtractVector(a);
+        Vector3D a = newForward.multiplyVector(up.dotProduct(newForward));
+        Vector3D newUp = up.subtractVector(a);
         newUp = newUp.normalizeVector();
 
         // NEW RIGHT DIRECTION JUST TAKES THE CROSS PRODUCT
@@ -257,6 +252,23 @@ public class Matrix4x4 implements Cloneable
                         }
                 });
     }
+    /**
+     *     public Matrix4x4 inverseMatrix()
+     *     {
+     *         return new Matrix4x4(new double[][]
+     *                 {
+     *                         {this.matrix[0][0], this.matrix[1][0], this.matrix[2][0], 0.0},
+     *                         {this.matrix[0][1], this.matrix[1][1], this.matrix[2][1], 0.0},
+     *                         {this.matrix[0][2], this.matrix[1][2], this.matrix[2][2], 0.0},
+     *                         {
+     *                                 -(this.matrix[3][0] * this.matrix[0][0] + this.matrix[3][1] * this.matrix[1][0] + this.matrix[3][2] * this.matrix[2][0]),
+     *                                 -(this.matrix[3][0] * this.matrix[0][1] + this.matrix[3][1] * this.matrix[1][1] + this.matrix[3][2] * this.matrix[2][1]),
+     *                                 -(this.matrix[3][0] * this.matrix[0][2] + this.matrix[3][1] * this.matrix[1][2] + this.matrix[3][2] * this.matrix[2][2]),
+     *                                 1.0
+     *                         }
+     *                 });
+     *     }
+     */
 
     @Override
     public String toString()

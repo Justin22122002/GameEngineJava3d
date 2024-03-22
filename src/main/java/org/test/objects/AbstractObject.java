@@ -16,7 +16,6 @@ public abstract class AbstractObject
     }
 
     protected abstract List<Mesh> loadObject();
-    public abstract void update();
 
     public void move(Vector3D translationVector)
     {

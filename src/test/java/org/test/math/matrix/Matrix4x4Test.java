@@ -140,6 +140,8 @@ class Matrix4x4Test
 
         Matrix4x4 result = matrix1.multiplyMatrix(matrix2);
 
+        System.out.println(result);
+
         Matrix4x4 rightResult = new Matrix4x4(new double[][]{
                 {90, 100, 110, 120},
                 {202, 228, 254, 280},
@@ -175,7 +177,7 @@ class Matrix4x4Test
                 {-1, 2, 3, -2}
         });
 
-        matrix.inverseMatrix();
+        System.out.println(matrix.inverseMatrix());;
     }
 
     @Test

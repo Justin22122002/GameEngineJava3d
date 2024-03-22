@@ -65,7 +65,7 @@ public class Scene extends AbstractScene
             getvCamera().setfPitch(getvCamera().getfPitch() + 0.008);
         }
 
-        car1.update();
+        car1.move(new Vector3D(0, 0, -0.01));
     }
 
     @Override

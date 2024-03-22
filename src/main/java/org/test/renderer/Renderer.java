@@ -66,7 +66,7 @@ public class Renderer
 
                 for (Triangle triangle : listTriangles)
                 {
-                    textureTriangle(triangle, vecTrianglesToRasterMap.get(triList));
+                    renderTriangle(triangle, vecTrianglesToRasterMap.get(triList));
                 }
             }
         }
@@ -113,19 +113,56 @@ public class Renderer
      * @param triangle The triangle to render.
      * @param drawMode option for rendering the triangle
      */
-    private void textureTriangle(Triangle triangle, DrawMode drawMode)
+    private void renderTriangle(Triangle triangle, DrawMode drawMode)
     {
         switch (drawMode)
         {
-            case DrawMode.TEXTURED -> TexturedTriangle((int) triangle.vec3D.x, (int) triangle.vec3D.y, triangle.vec2D.u, triangle.vec2D.v, triangle.vec2D.w,
+            case DrawMode.TEXTURED -> renderTexturedTriangle(triangle);
+            case DrawMode.WIREFRAME -> renderWireframeTriangle(triangle);
+            case DrawMode.SURFACE -> renderSurfaceTriangle(triangle);
+        }
+    }
+
+    /**
+     * Renders a textured triangle.
+     *
+     * @param triangle The triangle to render.
+     */
+    private void renderTexturedTriangle(Triangle triangle)
+    {
+        TexturedTriangle(
+                (int) triangle.vec3D.x, (int) triangle.vec3D.y, triangle.vec2D.u, triangle.vec2D.v, triangle.vec2D.w,
                 (int) triangle.vec3D2.x, (int) triangle.vec3D2.y, triangle.vec2D2.u, triangle.vec2D2.v, triangle.vec2D2.w,
                 (int) triangle.vec3D3.x, (int) triangle.vec3D3.y, triangle.vec2D3.u, triangle.vec2D3.v, triangle.vec2D3.w,
                 triangle.tex, 0, false, false, settings.getPixels(), settings.getzBuffer(), triangle.dp);
-            case DrawMode.WIREFRAME -> slDrawTriangle(settings.getPixels(), (int) triangle.vec3D.x, (int) triangle.vec3D.y, (int) triangle.vec3D2.x, (int) triangle.vec3D2.y,
-                    (int) triangle.vec3D3.x, (int) triangle.vec3D3.y, CD_WHITE);
-            case DrawMode.SURFACE -> slFillTriangle(settings.getPixels(),(int)triangle.vec3D.x,(int)triangle.vec3D.y,(int)triangle.vec3D2.x,(int)triangle.vec3D2.y,
-                    (int)triangle.vec3D3.x,(int)triangle.vec3D3.y,triangle.color.getRGB(), settings.getzBuffer());
-        }
+    }
+
+    /**
+     * Renders a wireframe triangle.
+     *
+     * @param triangle The triangle to render.
+     */
+    private void renderWireframeTriangle(Triangle triangle)
+    {
+        slDrawTriangle(settings.getPixels(),
+                (int) triangle.vec3D.x, (int) triangle.vec3D.y,
+                (int) triangle.vec3D2.x, (int) triangle.vec3D2.y,
+                (int) triangle.vec3D3.x, (int) triangle.vec3D3.y,
+                CD_WHITE);
+    }
+
+    /**
+     * Renders a surface-filled triangle.
+     *
+     * @param triangle The triangle to render.
+     */
+    private void renderSurfaceTriangle(Triangle triangle)
+    {
+        slFillTriangle(settings.getPixels(),
+                (int) triangle.vec3D.x, (int) triangle.vec3D.y,
+                (int) triangle.vec3D2.x, (int) triangle.vec3D2.y,
+                (int) triangle.vec3D3.x, (int) triangle.vec3D3.y,
+                triangle.color.getRGB(), settings.getzBuffer());
     }
 
     /**

@@ -4,6 +4,8 @@ import org.test.math.matrix.Matrix4x4;
 import org.test.math.triangle.Triangle;
 import org.test.math.vector.Vector3D;
 
+import java.util.Arrays;
+
 import static org.test.renderer.PanelConfig.getImageHeight;
 import static org.test.renderer.PanelConfig.getImageWidth;
 
@@ -118,6 +120,7 @@ public class RasterAssembler
         triProjection.vec3D = matProj.multiplyMatrixVector(clipped[n].vec3D);
         triProjection.vec3D2 = matProj.multiplyMatrixVector(clipped[n].vec3D2);
         triProjection.vec3D3 = matProj.multiplyMatrixVector(clipped[n].vec3D3);
+
         triProjection.vec2D = clipped[n].vec2D.clone();
         triProjection.vec2D2 = clipped[n].vec2D2.clone();
         triProjection.vec2D3 = clipped[n].vec2D3.clone();
