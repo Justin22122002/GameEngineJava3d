@@ -179,6 +179,11 @@ public class Vector3D implements Cloneable
         return (plane_n.x * this.x + plane_n.y * this.y + plane_n.z * this.z - plane_n.dotProduct(plane_p));
     }
 
+    /**
+     * Returns a string representation of this vector.
+     *
+     * @return A string representation of the vector.
+     */
     @Override
     public String toString()
     {
@@ -189,13 +194,6 @@ public class Vector3D implements Cloneable
                 ", w=" + w +
                 '}';
     }
-
-    /**
-     * Returns a string representation of this vector.
-     *
-     * @return A string representation of the vector.
-     */
-
 
     @Override
     public Vector3D clone()

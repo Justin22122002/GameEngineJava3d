@@ -15,24 +15,24 @@ public class Scene extends AbstractScene
     {
         Vector3D vForward = getvCamera().getvLookDir().normalizeVector(); // Normalisierte Blickrichtung
 
-        if (keyH.rightPressed)
+        if (keyH.leftPressed)
         {
             getvCamera().setPosition(getvCamera().getPosition().subtractVector(vForward.crossProduct(new Vector3D(0, 0.1, 0))));
         }
 
-        if (keyH.leftPressed)
+        if (keyH.rightPressed)
         {
             getvCamera().setPosition(getvCamera().getPosition().addVector(vForward.crossProduct(new Vector3D(0, 0.1, 0))));
         }
 
         if (keyH.downPressed)
         {
-            getvCamera().getPosition().y += 0.1;
+            getvCamera().getPosition().y -= 0.1;
         }
 
         if (keyH.upPressed)
         {
-            getvCamera().getPosition().y -= 0.1;
+            getvCamera().getPosition().y += 0.1;
         }
 
         if (keyH.frontPressed)
@@ -47,12 +47,12 @@ public class Scene extends AbstractScene
 
         if (keyH.rightTurn)
         {
-            getvCamera().setfYaw(getvCamera().getfYaw() - 0.008);
+            getvCamera().setfYaw(getvCamera().getfYaw() + 0.008);
         }
 
         if (keyH.leftTurn)
         {
-            getvCamera().setfYaw(getvCamera().getfYaw() + 0.008);
+            getvCamera().setfYaw(getvCamera().getfYaw() - 0.008);
         }
 
         if (keyH.upTurn)

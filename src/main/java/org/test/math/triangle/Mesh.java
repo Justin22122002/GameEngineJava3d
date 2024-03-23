@@ -82,20 +82,20 @@ public class Mesh
                             (
                                     new Vector3D
                                             (
-                                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
-                                                    vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
+                                                    -vertices.get(Integer.parseInt(spl1[0]) - 1)[0],
+                                                    -vertices.get(Integer.parseInt(spl1[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl1[0]) - 1)[2]
                                             ),
                                     new Vector3D
                                             (
-                                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
-                                                    vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
+                                                    -vertices.get(Integer.parseInt(spl2[0]) - 1)[0],
+                                                    -vertices.get(Integer.parseInt(spl2[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl2[0]) - 1)[2]
                                             ),
                                     new Vector3D
                                             (
-                                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
-                                                    vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
+                                                    -vertices.get(Integer.parseInt(spl3[0]) - 1)[0],
+                                                    -vertices.get(Integer.parseInt(spl3[0]) - 1)[1],
                                                     vertices.get(Integer.parseInt(spl3[0]) - 1)[2]
                                             ),
                                     new Vector2D

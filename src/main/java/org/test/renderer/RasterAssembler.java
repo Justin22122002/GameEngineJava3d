@@ -145,6 +145,7 @@ public class RasterAssembler
         triProjection.vec2D2.w = 1.0d / triProjection.vec3D2.w;
         triProjection.vec2D3.w = 1.0d / triProjection.vec3D3.w;
 
+        // Scale into view, we moved the normalising into cartesian space
         triProjection.vec3D = triProjection.vec3D.divideVector(triProjection.vec3D.w);
         triProjection.vec3D2 = triProjection.vec3D2.divideVector(triProjection.vec3D2.w);
         triProjection.vec3D3 = triProjection.vec3D3.divideVector(triProjection.vec3D3.w);
@@ -157,13 +158,19 @@ public class RasterAssembler
      */
     public void scaleIntoView(Triangle triProjection)
     {
-        // scale into view
-        triProjection.vec3D.x += 1.0;
-        triProjection.vec3D2.x += 1.0;
-        triProjection.vec3D3.x += 1.0;
-        triProjection.vec3D.y += 1.0;
-        triProjection.vec3D2.y += 1.0;
-        triProjection.vec3D3.y += 1.0;
+        // X/Y are inverted so put them back
+        triProjection.vec3D.x *= -1.0;
+        triProjection.vec3D2.x *= -1.0;
+        triProjection.vec3D3.x *= -1.0;
+        triProjection.vec3D.y *= -1.0;
+        triProjection.vec3D2.y *= -1.0;
+        triProjection.vec3D3.y *= -1.0;
+
+        // Offset verts into visible normalised space
+        Vector3D vOffsetView = new Vector3D(1, 1, 0);
+        triProjection.vec3D = triProjection.vec3D.addVector(vOffsetView);
+        triProjection.vec3D2 = triProjection.vec3D2.addVector(vOffsetView);
+        triProjection.vec3D3 = triProjection.vec3D3.addVector(vOffsetView);
 
         triProjection.vec3D.x *= 0.5 * getImageWidth();
         triProjection.vec3D.y *= 0.5 * getImageHeight();

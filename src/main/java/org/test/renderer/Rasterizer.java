@@ -48,7 +48,7 @@ public class Rasterizer
         settings.setMatZX(Matrix4x4.rotateMatrixX(settings.getvCamera().getfTheta()));
 
         // Translation matrix
-        Matrix4x4 trans = Matrix4x4.translationMatrix(0, 0, 1);
+        Matrix4x4 trans = Matrix4x4.translationMatrix(0, 0, 5);
 
         // Matrix multiplication to accumulate multiple transformations
         Matrix4x4 matWorld = settings.getMatZ().multiplyMatrix(settings.getMatZX());
