@@ -253,21 +253,15 @@ public class Matrix4x4 implements Cloneable
                 });
     }
     /**
-     *     public Matrix4x4 inverseMatrix()
-     *     {
-     *         return new Matrix4x4(new double[][]
-     *                 {
-     *                         {this.matrix[0][0], this.matrix[1][0], this.matrix[2][0], 0.0},
-     *                         {this.matrix[0][1], this.matrix[1][1], this.matrix[2][1], 0.0},
-     *                         {this.matrix[0][2], this.matrix[1][2], this.matrix[2][2], 0.0},
-     *                         {
-     *                                 -(this.matrix[3][0] * this.matrix[0][0] + this.matrix[3][1] * this.matrix[1][0] + this.matrix[3][2] * this.matrix[2][0]),
-     *                                 -(this.matrix[3][0] * this.matrix[0][1] + this.matrix[3][1] * this.matrix[1][1] + this.matrix[3][2] * this.matrix[2][1]),
-     *                                 -(this.matrix[3][0] * this.matrix[0][2] + this.matrix[3][1] * this.matrix[1][2] + this.matrix[3][2] * this.matrix[2][2]),
-     *                                 1.0
-     *                         }
-     *                 });
-     *     }
+     *          Matrix4x4 m = new Matrix4x4(new double[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}});
+     *         m.matrix[0][0] = this.matrix[0][0]; m.matrix[0][1] = this.matrix[1][0]; m.matrix[0][2] = this.matrix[2][0]; m.matrix[0][3] = 0.0f;
+     *         m.matrix[1][0] = this.matrix[0][1]; m.matrix[1][1] = this.matrix[1][1]; m.matrix[1][2] = this.matrix[2][1]; m.matrix[1][3] = 0.0f;
+     *         m.matrix[2][0] = this.matrix[0][2]; m.matrix[2][1] = this.matrix[1][2]; m.matrix[2][2] = this.matrix[2][2]; m.matrix[2][3] = 0.0f;
+     *         m.matrix[3][0] = -(this.matrix[3][0] * m.matrix[0][0] + this.matrix[3][1] * m.matrix[1][0] + this.matrix[3][2] * m.matrix[2][0]);
+     *         m.matrix[3][1] = -(this.matrix[3][0] * m.matrix[0][1] + this.matrix[3][1] * m.matrix[1][1] + this.matrix[3][2] * m.matrix[2][1]);
+     *         m.matrix[3][2] = -(this.matrix[3][0] * m.matrix[0][2] + this.matrix[3][1] * m.matrix[1][2] + this.matrix[3][2] * m.matrix[2][2]);
+     *         m.matrix[3][3] = 1.0f;
+     *         return m;
      */
 
     @Override
